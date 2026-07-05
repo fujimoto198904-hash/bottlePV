@@ -25,8 +25,11 @@
 | — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等）＋サムネPNG | FCPXがSVGを読めない時はこちら |
 | — | `assets/16x9/` | 16:9版のCTA・ARオーバーレイ（SVG＋PNG） | 16:9併用版のとき |
 | — | `assets/thumbnail-9x16.svg` / `thumbnail-16x9.svg` | サムネ／カバー画像（フック付き） | SNS投稿・YouTube |
-| — | `subtitles/` | 字幕 **SRT**（本編＋altA/altB/altE英語） | 字幕を載せるとき |
+| — | `assets/audio/` | 合成SEの**実WAV**（ピロン/スキャン/ブランドチャイム） | 音を仮組み・本番でも使用可 |
+| — | `subtitles/` | 字幕 **SRT**（本編＋altA/altB/altC/altD/altE英語） | 字幕を載せるとき |
 | — | `alt-versions/` | 別バージョン台本5本（ベテラン/満席/女性店長/記念日/英語） | 横展開するとき |
+| — | `animatic/index.html` | **再生できる35秒アニマティック**（仮映像＋合成音） | 尺・テンポの当たり確認 |
+| — | `voice-master-list.csv` | 全バージョンの音声ライン一覧（全31） | Irodoriで一括収録 |
 | — | `dashboard/index.html` | 制作ダッシュボード（全部入りUI・進捗管理） | 制作中つねに開いておく |
 | — | `voice-exports/` | Irodoriから書き出した音声の置き場（命名規則あり） | 音声を保存する |
 | — | `domoai-exports/` | DomoAIから書き出した映像クリップの置き場（命名規則あり） | 映像を保存する |
