@@ -1,0 +1,76 @@
+<!--
+  Bottle Scanner ─ CTAエンドカード（全画面 1080x1920）
+  用途: SHOT10（0:32–0:35）でフェードイン。
+  演出（FCPX側で要素ごとに出し）:
+    1) 背景フェードイン → 2) ロゴ スケールイン（SE_0032_brand）
+    3) メインコピー フェード＋上スライド → 4) サブ「プロフィールから」フェード
+  PNG書き出し: 1080x1920 PNG（背景あり）でエクスポート
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" font-family="'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',sans-serif">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.75">
+      <stop offset="0" stop-color="#26201A"/>
+      <stop offset="1" stop-color="#100D0A"/>
+    </radialGradient>
+    <linearGradient id="amberGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F1C978"/>
+      <stop offset="1" stop-color="#D99A34"/>
+    </linearGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="bokehBlur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="26"/>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <!-- bokeh accents -->
+  <g filter="url(#bokehBlur)" opacity="0.5">
+    <circle cx="180" cy="380" r="70" fill="#E8B451" opacity="0.5"/>
+    <circle cx="920" cy="300" r="52" fill="#3FE0C5" opacity="0.4"/>
+    <circle cx="880" cy="1500" r="90" fill="#E8B451" opacity="0.35"/>
+    <circle cx="160" cy="1580" r="60" fill="#3FE0C5" opacity="0.3"/>
+  </g>
+
+  <!-- ICON: bottle in scan brackets (centered) -->
+  <g transform="translate(440,470) scale(1.0)">
+    <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#softGlow)">
+      <path d="M8,70 V8 H70"/>
+      <path d="M192,70 V8 H130"/>
+      <path d="M8,196 V258 H70"/>
+      <path d="M192,196 V258 H130"/>
+    </g>
+    <line x1="18" y1="133" x2="182" y2="133" stroke="#3FE0C5" stroke-width="3" opacity="0.7"/>
+    <path d="M86,34 H114 V80 C114,80 134,92 134,118 V198 C134,210 125,218 113,218 H87
+             C75,218 66,210 66,198 V118 C66,92 86,80 86,80 Z"
+          fill="url(#amberGrad)" stroke="#14110E" stroke-width="2"/>
+    <rect x="84" y="22" width="32" height="16" rx="4" fill="#3FE0C5"/>
+    <rect x="78" y="142" width="44" height="52" rx="6" fill="#14110E" opacity="0.85"/>
+    <path d="M88,168 l7,8 l14,-16" fill="none" stroke="#3FE0C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <text x="540" y="900" font-size="104" font-weight="800" fill="#F5EFE6" text-anchor="middle" letter-spacing="-2">Bottle <tspan fill="#E8B451">Scanner</tspan></text>
+
+  <!-- divider -->
+  <line x1="360" y1="965" x2="720" y2="965" stroke="#3FE0C5" stroke-width="3" opacity="0.8"/>
+
+  <!-- main copy -->
+  <text x="540" y="1120" font-size="62" font-weight="800" fill="#F5EFE6" text-anchor="middle">探す時間を、</text>
+  <text x="540" y="1210" font-size="62" font-weight="800" fill="#E8B451" text-anchor="middle">おもてなしの時間に。</text>
+
+  <!-- sub copy -->
+  <text x="540" y="1330" font-size="40" font-weight="600" fill="#F5EFE6" text-anchor="middle" opacity="0.9">ボトルキープ、もう迷わない。</text>
+
+  <!-- CTA pill -->
+  <g transform="translate(540,1500)">
+    <rect x="-290" y="-56" width="580" height="112" rx="56" fill="#3FE0C5"/>
+    <text x="0" y="14" font-size="44" font-weight="800" fill="#14110E" text-anchor="middle">詳しくはプロフィールから</text>
+  </g>
+  <!-- up arrow hint toward profile -->
+  <path d="M540,1400 l-26,34 h52 z" fill="#3FE0C5" opacity="0.9"/>
+  <path d="M540,1382 v40" stroke="#3FE0C5" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+</svg>

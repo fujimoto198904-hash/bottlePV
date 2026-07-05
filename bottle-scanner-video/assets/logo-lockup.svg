@@ -1,0 +1,49 @@
+<!--
+  Bottle Scanner ─ ロゴ・ロックアップ（横組み・背景透過）
+  用途: 汎用ロゴ / サムネ / プロフィール画像 / 他バージョン動画
+  PNG書き出し: ブラウザで開く→スクリーンショット、または
+    Inkscape/デザインツールで 2000x760 程度・背景透過PNGにエクスポート
+  ブランド色: amber #E8B451 / mint #3FE0C5 / charcoal #14110E / off-white #F5EFE6
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" font-family="'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',sans-serif">
+  <defs>
+    <linearGradient id="amberGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F1C978"/>
+      <stop offset="1" stop-color="#D99A34"/>
+    </linearGradient>
+    <filter id="mintGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- ICON: bottle in scan brackets -->
+  <g transform="translate(40,60)">
+    <!-- scan brackets (mint) -->
+    <g stroke="#3FE0C5" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#mintGlow)">
+      <path d="M8,70 V8 H70"/>
+      <path d="M188,70 V8 H126"/>
+      <path d="M8,192 V254 H70"/>
+      <path d="M188,192 V254 H126"/>
+    </g>
+    <!-- scan line -->
+    <line x1="18" y1="131" x2="178" y2="131" stroke="#3FE0C5" stroke-width="3" opacity="0.7"/>
+    <!-- bottle -->
+    <path d="M84,34 H112 V78 C112,78 132,90 132,116 V196 C132,208 123,216 111,216 H85
+             C73,216 64,208 64,196 V116 C64,90 84,78 84,78 Z"
+          fill="url(#amberGrad)" stroke="#14110E" stroke-width="2"/>
+    <!-- cap -->
+    <rect x="82" y="22" width="32" height="16" rx="4" fill="#3FE0C5"/>
+    <!-- label with check -->
+    <rect x="76" y="140" width="44" height="52" rx="6" fill="#14110E" opacity="0.85"/>
+    <path d="M86,166 l7,8 l14,-16" fill="none" stroke="#3FE0C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <g transform="translate(320,0)">
+    <text x="0" y="180" font-size="96" font-weight="800" fill="#F5EFE6" letter-spacing="-2">Bottle</text>
+    <text x="0" y="290" font-size="96" font-weight="800" fill="#E8B451" letter-spacing="-2">Scanner</text>
+    <!-- tagline -->
+    <text x="4" y="345" font-size="30" font-weight="600" fill="#3FE0C5" letter-spacing="4">ボトルキープ、もう迷わない。</text>
+  </g>
+</svg>

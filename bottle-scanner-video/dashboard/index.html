@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bottle Scanner ─ 制作ダッシュボード</title>
+<style>
+  :root{
+    --amber:#E8B451; --mint:#3FE0C5; --char:#14110E; --panel:#1D1913;
+    --panel2:#241f18; --ink:#F5EFE6; --muted:#b7ad9c; --line:#3a3228;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(160deg,#100d0a,#1a1611);color:var(--ink);
+    font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:var(--mint)}
+  header{padding:28px 20px 16px;max-width:1100px;margin:0 auto}
+  h1{margin:0;font-size:26px;letter-spacing:-.5px}
+  h1 .b{color:var(--amber)}
+  .sub{color:var(--muted);margin:4px 0 14px;font-size:14px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{background:var(--panel);border:1px solid var(--line);border-radius:999px;
+    padding:5px 12px;font-size:12.5px;color:var(--mint)}
+  .chip b{color:var(--ink)}
+  .progwrap{max-width:1100px;margin:10px auto 0;padding:0 20px}
+  .progbar{height:10px;background:#0c0a08;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .progfill{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--amber));transition:width .3s}
+  .progtxt{font-size:12px;color:var(--muted);margin-top:6px}
+  nav{position:sticky;top:0;z-index:10;background:rgba(16,13,10,.92);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);margin-top:14px}
+  .navin{max-width:1100px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:8px 12px}
+  .tab{white-space:nowrap;padding:9px 14px;border-radius:10px;cursor:pointer;font-size:14px;
+    color:var(--muted);border:1px solid transparent;user-select:none}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--char);background:var(--mint);font-weight:700}
+  main{max-width:1100px;margin:0 auto;padding:20px}
+  section{display:none;animation:fade .25s}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+  h2{font-size:19px;border-left:4px solid var(--amber);padding-left:10px;margin:6px 0 14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;margin-bottom:14px}
+  .card h3{margin:0 0 4px;font-size:16px}
+  .card h3 .tc{color:var(--mint);font-size:13px;font-weight:600;margin-left:8px}
+  .meta{color:var(--muted);font-size:13px;margin:2px 0 10px}
+  .meta b{color:var(--ink)}
+  .prompt{position:relative;background:#0e0c09;border:1px solid var(--line);border-radius:10px;
+    padding:12px 44px 12px 12px;font-family:ui-monospace,'SF Mono',Menlo,monospace;
+    font-size:12px;color:#d8e8e2;white-space:pre-wrap;word-break:break-word;margin:6px 0}
+  .plabel{font-size:11px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin:12px 0 2px}
+  .copy{position:absolute;top:8px;right:8px;background:var(--panel2);border:1px solid var(--line);
+    color:var(--mint);border-radius:8px;padding:5px 9px;font-size:11px;cursor:pointer}
+  .copy:hover{background:var(--mint);color:var(--char)}
+  .copy.ok{background:var(--amber);color:var(--char);border-color:var(--amber)}
+  .checks{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+  label.ck{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer}
+  label.ck input{width:17px;height:17px;accent-color:var(--mint)}
+  label.ck.done{color:var(--mint)}
+  table{width:100%;border-collapse:collapse;font-size:13px;overflow:hidden;border-radius:12px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+  th{color:var(--amber);font-weight:700;font-size:12px}
+  tr:hover td{background:rgba(63,224,197,.04)}
+  .hero{color:var(--char);background:var(--mint);border-radius:6px;padding:1px 7px;font-size:11px;font-weight:800}
+  .tl{display:flex;height:64px;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:10px 0 4px}
+  .tl div{display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#0c0a08;
+    font-weight:800;border-right:1px solid rgba(0,0,0,.25);text-align:center;padding:2px}
+  .tl .s1{background:#6b5a3f}.tl .s2{background:#8a6d3a}.tl .s3{background:var(--mint)}
+  .tl .s4{background:var(--amber)}.tl .s5{background:#cfc3ad}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:16px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .steps{counter-reset:s;padding:0;list-style:none;margin:0}
+  .steps li{counter-increment:s;position:relative;padding:10px 0 10px 44px;border-bottom:1px solid var(--line)}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:30px;height:30px;
+    background:var(--panel2);border:1px solid var(--mint);color:var(--mint);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+  .gv{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .gvi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+  .gvi img{width:100%;height:auto;background:#0c0a08;border-radius:8px}
+  .gvi .cap{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .note{background:var(--panel2);border-left:3px solid var(--amber);border-radius:8px;padding:10px 12px;
+    font-size:13px;color:var(--muted);margin:10px 0}
+  .emo{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+    padding:2px 9px;font-size:12px;color:var(--amber);margin:2px 4px 2px 0}
+  footer{max-width:1100px;margin:0 auto;padding:24px 20px 60px;color:var(--muted);font-size:12px}
+  .resetbtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="b">Bottle Scanner</span> ─ 制作ダッシュボード</h1>
+  <div class="sub">ショートドラマ 35秒 ／ DomoAI × Irodori × FCPX 制作管理システム</div>
+  <div class="chips">
+    <span class="chip"><b>画角</b> 9:16 縦型</span>
+    <span class="chip"><b>解像度</b> 1080×1920</span>
+    <span class="chip"><b>fps</b> 30</span>
+    <span class="chip"><b>尺</b> 35秒</span>
+    <span class="chip"><b>画</b> 実写シネマティック</span>
+    <span class="chip"><b>音声</b> 日本語(Irodori)</span>
+  </div>
+</header>
+<div class="progwrap">
+  <div class="progbar"><div class="progfill" id="pf"></div></div>
+  <div class="progtxt"><span id="pt">進捗 0%</span> ・ チェックはこの端末に自動保存されます ・ <button class="resetbtn" onclick="resetAll()">進捗をリセット</button></div>
+</div>
+
+<nav><div class="navin" id="tabs"></div></nav>
+<main id="main"></main>
+
+<footer>
+  素材一覧: <code>01_production-bible.md</code> / <code>02_shot-list.md</code> / <code>03_domoai-prompts.md</code> /
+  <code>04_irodori-voice-script.md</code> / <code>05_se-bgm-cue-sheet.md</code> / <code>06_graphics-telop-spec.md</code> /
+  <code>07_fcpx-assembly-guide.md</code> / <code>assets/</code><br>
+  制作：動画制作プロデューサー ／ 最終合成・納品：制作者（FCPX）
+</footer>
+
+<script>
+/* ---------- DATA ---------- */
+const STYLE_SUFFIX = "shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k";
+const NEG = "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person";
+
+const SHOTS = [
+{id:"SHOT01",tc:"0:00–0:04",dur:"4.0s",title:"establishing / マナミの注文",
+ cam:"ミディアム・浅い被写界深度・ゆっくりドリーイン",
+ act:"マナミが穏やかに注文する",
+ audio:"Manami「いつものボトル、お願いできる？山崎の…」／店内アンビエンス・氷",
+ key:`Cinematic medium shot, an elegant Japanese woman in her early 30s, shoulder-length wavy dark-brown hair, refined natural makeup, wearing a deep wine-red silk blouse, seated at the bar counter with a whisky glass in front of her, warm and composed, gently placing an order, inside an upscale intimate Japanese whisky bar at night, dark polished wood counter, brass fixtures, a large back-shelf wall filled with rows of kept whisky bottles each with a small paper name tag, warm bottle bokeh in the background, moody low-key ambience, ${STYLE_SUFFIX}`,
+ i2v:`slow subtle dolly-in toward the woman, she calmly speaks and gives a small warm gesture, gentle candle flicker on the bottles behind, very subtle head movement, cinematic, minimal camera shake, natural micro-expressions`,
+ t2v:`Cinematic vertical video, slow dolly-in on an elegant Japanese woman in her early 30s with wavy dark-brown hair in a wine-red silk blouse, seated at a moody upscale whisky bar counter at night, warm amber lighting, a wall of kept whisky bottles bokeh behind her, she calmly places an order, photoreal, shallow depth of field, film grain, 9:16`},
+{id:"SHOT02",tc:"0:04–0:08",dur:"4.0s",title:"ケンジ、棚を振り返り固まる",
+ cam:"バストショット→振り返りで壁がラックフォーカス",
+ act:"「あ、はい！」の直後に振り返り表情がこわばる",
+ audio:"Kenji「あ、はい！少々お待ちください…！」／衣擦れ／緊張スティング",
+ key:`Cinematic bust shot from behind the bar, a Japanese man in his mid-20s, short neat black hair, clean-shaven, slim build, wearing a crisp white dress shirt with rolled sleeves and a fitted black waistcoat and a black bartender apron, youthful earnest face, just turned around to face a huge back-shelf wall filled with dozens of rows of kept whisky bottles each with a small paper name tag, his expression stiffening with quiet panic, overwhelmed, inside an upscale intimate Japanese whisky bar at night, dark polished wood counter, brass fixtures, warm bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`the young bartender turns his head toward the bottle wall then freezes, rack focus from his face to the overwhelming wall of bottles behind, tiny nervous swallow, subtle breathing, very slight handheld feel, cinematic, no large movement`,
+ t2v:`Cinematic vertical video, a nervous Japanese man in his mid-20s in a white shirt and black waistcoat and bartender apron turns around behind a bar and freezes facing a huge wall of dozens of kept whisky bottles, rack focus to the bottles, warm moody low-key lighting, photoreal, film grain, shallow depth of field, 9:16`},
+{id:"SHOT03",tc:"0:08–0:12",dur:"4.0s",title:"ラベルを一本ずつ確認する焦り",
+ cam:"手元＋横顔クロースアップ・手持ち微ブレ",
+ act:"タグを指で追う。目線が泳ぐ。額に汗",
+ audio:"Kenji(心の声)「え、どれだっけ…先週も探したのに…」／ボトルのカチャ音",
+ key:`Cinematic close-up of a Japanese man in his mid-20s, short neat black hair, clean-shaven, in a white dress shirt with rolled sleeves and black waistcoat, his finger tracing along the small paper name tags of kept whisky bottles on a shelf, eyes darting nervously, a faint sweat on his forehead, growing anxiety, inside an upscale whisky bar at night, dark wood, brass, warm bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`his finger slides across the bottle name tags one by one, eyes flicking left and right with rising worry, subtle nervous breathing, tiny handheld camera sway to build tension, cinematic, small realistic movements only`,
+ t2v:`Cinematic vertical close-up video, a worried young Japanese bartender's finger checking name tags on a shelf of whisky bottles one by one, eyes darting, faint sweat, warm moody low-key bar lighting, handheld tension, photoreal, film grain, 9:16`},
+{id:"SHOT04",tc:"0:12–0:15",dur:"3.0s",title:"マナミがチラッと時間を見る",
+ cam:"クロースアップ・視線が時計へ",
+ act:"さりげなく時間を確認→前へ視線を戻す",
+ audio:"SE：時計/スマホに触れる微音／アンビエンス",
+ key:`Cinematic close-up of an elegant Japanese woman in her early 30s, wavy dark-brown hair, wine-red silk blouse, seated at a bar counter, glancing down at her wristwatch with a subtle patient look, not annoyed, refined, inside an upscale whisky bar at night, warm amber lighting, brass fixtures, bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`she subtly lowers her eyes to check the time then looks back up toward the bar, a small patient breath, very gentle movement, warm candle flicker, cinematic, minimal motion`,
+ t2v:`Cinematic vertical video, an elegant Japanese woman in a wine-red blouse at a moody bar counter subtly glances at her wristwatch then looks back up, patient expression, warm amber lighting, photoreal, shallow depth of field, film grain, 9:16`},
+{id:"SHOT05",tc:"0:15–0:18",dur:"3.0s",title:"タカシが気づいて小声で気遣う",
+ cam:"タカシ→ケンジへの視線・奥のケンジをボケ",
+ act:"眉をひそめ小声で気遣う",
+ audio:"Takashi(小声)「ケンジ、大丈夫か？」",
+ key:`Cinematic shot of a distinguished Japanese man in his late 40s, short salt-and-pepper hair, a well-groomed short grey beard, wearing a black shirt and dark sommelier apron, standing a little apart behind the bar, glancing with a slightly furrowed concerned brow toward a young bartender blurred in the background, inside an upscale whisky bar at night, warm amber lighting, brass, bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`the veteran manager notices, brow furrows slightly with concern, he leans in a touch and speaks quietly, very subtle head turn toward the younger staff, cinematic, small realistic movement`,
+ t2v:`Cinematic vertical video, a distinguished late-40s Japanese bar manager with salt-and-pepper hair and grey beard in a black shirt notices and quietly speaks with a concerned look toward a blurred young bartender behind him, warm moody bar lighting, photoreal, film grain, 9:16`},
+{id:"SHOT06",tc:"0:18–0:21",dur:"3.0s",title:"ひらめき → スマホを取り出す",
+ cam:"クロースアップ・ハッとする→ポケットからスマホ",
+ act:"ハッとして手を伸ばしスマホを構える",
+ audio:"SE：スマホ取り出し／UIタップ／BGMに小さなリフト",
+ key:`Cinematic close-up of a Japanese man in his mid-20s, short neat black hair, white dress shirt and black waistcoat, a sudden spark of realization on his face, reaching into his apron pocket to pull out a smartphone, inside an upscale whisky bar at night, warm amber lighting starting to mix with a faint cool phone-screen glow on his face, brass, bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`his eyes light up with an idea, he quickly pulls a smartphone from his pocket and raises it, a faint cool glow begins to touch his face, decisive small movement, cinematic, natural motion`,
+ t2v:`Cinematic vertical video, a young Japanese bartender suddenly gets an idea, his face brightens, he pulls a smartphone from his apron pocket and raises it, warm bar lighting with a hint of cool screen glow, photoreal, shallow depth of field, film grain, 9:16`},
+{id:"SHOT07",tc:"0:21–0:24",dur:"3.0s",title:"AR発見 ★ヒーローショット",hero:true,
+ cam:"肩越し・スマホ画面と棚（AR枠はFCPXで合成）",
+ act:"画面を見て表情が一気に明るくなる",
+ audio:"SE：スキャンスイープ→ピロン(通知)／Kenji「…あった！」／暗→明の反転",
+ key:`Cinematic over-the-shoulder shot of a Japanese man in his mid-20s, white dress shirt and black waistcoat, holding up a smartphone toward a wall of kept whisky bottles, his face lit brighter now with a cool mint-cyan glow from the screen mixing with warm amber, an expression of relief and delight beginning, the bottle shelf in front sharp and inviting, inside an upscale whisky bar at night, brass, bottle bokeh, brighter uplifting lighting, ${STYLE_SUFFIX}`,
+ i2v:`he holds the phone steady toward the shelf, his face brightens into relief and a small smile, the lighting subtly lifts from dark to bright, a gentle push-in toward the target bottle, cinematic, smooth minimal motion, leave clean space on the phone screen for a UI overlay`,
+ t2v:`Cinematic vertical video, a young Japanese bartender holds up a smartphone toward a wall of whisky bottles, his face brightening with relief lit by a cool mint glow, lighting lifts from dark to bright, gentle push-in on the target bottle, photoreal, film grain, 9:16, keep phone screen area clean`},
+{id:"SHOT08",tc:"0:24–0:28",dur:"4.0s",title:"ボトルを取り、マナミの前へ提供",
+ cam:"動作を追うミディアム",
+ act:"迷いなく一本を取りカウンターへ提供",
+ audio:"Kenji「お待たせしました、山崎です」／SE：置く「トッ」",
+ key:`Cinematic medium shot of a Japanese man in his mid-20s, white dress shirt and black waistcoat and bartender apron, confidently taking a specific whisky bottle from the shelf and setting it down on the polished bar counter in front of a customer, self-assured posture, inside an upscale whisky bar at night, warm and now brighter inviting lighting, brass, bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`he decisively takes the bottle, turns and places it gently on the counter with a confident motion, a slight professional nod, warmer brighter light, cinematic, smooth natural movement`,
+ t2v:`Cinematic vertical video, a now-confident young Japanese bartender takes a whisky bottle from the shelf and places it on the bar counter in front of a seated customer, warm inviting lighting, photoreal, shallow depth of field, film grain, 9:16`},
+{id:"SHOT09",tc:"0:28–0:32",dur:"4.0s",title:"マナミの笑顔／奥でタカシのうなずき（オチ）",
+ cam:"マナミ笑顔CU→奥にタカシのうなずきをボケ",
+ act:"マナミ「頼りになる」→タカシうなずき",
+ audio:"Manami「早いね、ケンジ君。頼りになる」／温かいBGM",
+ key:`Cinematic close-up of an elegant Japanese woman in her early 30s, wavy dark-brown hair, wine-red silk blouse, seated at the bar, looking up with a genuine warm delighted smile, and softly out of focus in the background a distinguished late-40s Japanese man with salt-and-pepper hair and grey beard in a black shirt nodding with quiet satisfaction, inside an upscale whisky bar at night, warm bright happy lighting, brass, bottle bokeh, ${STYLE_SUFFIX}`,
+ i2v:`the woman looks up and breaks into a warm genuine smile, in the soft background the veteran manager gives a small satisfied nod, gentle warm ambience, cinematic, natural micro-expressions, minimal camera motion`,
+ t2v:`Cinematic vertical video, an elegant Japanese woman at a bar counter looks up with a warm genuine smile, while a distinguished bar manager nods with satisfaction blurred in the background, warm happy lighting, photoreal, shallow depth of field, film grain, 9:16`}
+];
+
+const VOICE = [
+{id:"VO_S1_manami_01",who:"マナミ",text:"いつものボトル、お願いできる？山崎の…",read:"いつものボトル、おねがいできる？やまざきの…",emo:["ゆっくり","中〜やや低","くつろぎ・品"],dir:"常連の余裕。語尾を思い出すように伸ばす",len:"約3.0秒"},
+{id:"VO_S1_kenji_01",who:"ケンジ",text:"あ、はい！少々お待ちください…！",read:"あ、はい！しょうしょうおまちください…！",emo:["やや速め","やや高","緊張"],dir:"上ずり気味・焦りが滲む",len:"約2.2秒"},
+{id:"NA_S2_kenji_01",who:"ケンジ(心の声)",text:"え、どれだっけ…先週も探したのに…",read:"え、どれだっけ…せんしゅうもさがしたのに…",emo:["やや速め","抑えめ","内語"],dir:"声を張らない内語。つぶやき。FCPXで軽リバーブ",len:"約2.5秒"},
+{id:"VO_S2_takashi_01",who:"タカシ",text:"ケンジ、大丈夫か？",read:"ケンジ、だいじょうぶか？",emo:["ゆっくり","低","小声・気遣い"],dir:"責めず気遣う。近接ささやき・音量控えめ",len:"約1.8秒"},
+{id:"VO_S3_kenji_01",who:"ケンジ",text:"…あった！",read:"…あった！",emo:["通常","ぱっと上昇","歓喜"],dir:"暗→明の転換点。息が抜けるように弾む",len:"約0.8秒"},
+{id:"VO_S4_kenji_01",who:"ケンジ",text:"お待たせしました、山崎です",read:"おまたせしました、やまざきです",emo:["通常","安定","自信"],dir:"焦りが消え、丁寧でスマート",len:"約2.2秒"},
+{id:"VO_S4_manami_01",who:"マナミ",text:"早いね、ケンジ君。頼りになる",read:"はやいね、ケンジくん。たよりになる",emo:["ゆっくり","笑顔含み","あたたかい"],dir:"オチ。感心したように。信頼が伝わる",len:"約2.5秒"},
+{id:"NA_S5_narrator_01",who:"ナレーション(任意)",text:"探す時間を、おもてなしの時間に。",read:"さがすじかんを、おもてなしのじかんに。",emo:["ゆっくり","明瞭","ブランド"],dir:"CTA。落ち着いた信頼感。※入れない選択も可",len:"約2.5秒"}
+];
+
+const AUDIO=[
+["○","0:00〜","room tone 店内アンビエンス(ループ)","SE_bg_ambience.wav"],
+["○","0:02","グラス・氷の音","SE_0002_glass.wav"],
+["○","0:05","振り返りの衣擦れ","SE_0005_turn.wav"],
+["◎","0:07","緊張スティング(控えめ)","SE_0007_freeze-sting.wav"],
+["○","0:08–12","ボトル操作のカチャ音","SE_0009_bottles.wav"],
+["○","0:13","時計に触れる微音","SE_0013_watch.wav"],
+["○","0:18","スマホ取り出し／UIタップ","SE_0018_phone.wav"],
+["◎","0:20","スキャンスイープ(上昇)","SE_0020_scan-sweep.wav"],
+["◎◎","0:21","ピロン(成功通知)★ヒーローSE","SE_0021_notify-piron.wav"],
+["○","0:24","ボトルを取る音","SE_0024_pickup.wav"],
+["○","0:28","ボトルを置く「トッ」","SE_0028_place.wav"],
+["◎","0:32","ブランドウーシュ＋チャイム","SE_0032_brand.wav"],
+["—","0:00–35","BGM(区間で強弱・ダッキング)","BGM_main.wav"]
+];
+/* ---------- RENDER ---------- */
+const TABS=[["overview","概要・進行"],["shots","ショット & プロンプト"],["voice","音声台本(Irodori)"],["audio","音 (SE/BGM)"],["gfx","グラフィック"],["fcpx","FCPX合成"]];
+const store=JSON.parse(localStorage.getItem("bs_prog")||"{}");
+function save(){localStorage.setItem("bs_prog",JSON.stringify(store));updateProg()}
+function ck(id,label){const on=!!store[id];return `<label class="ck ${on?'done':''}"><input type="checkbox" data-id="${id}" ${on?'checked':''}>${label}</label>`}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function promptBlock(label,txt){return `<div class="plabel">${label}</div><div class="prompt"><button class="copy" data-copy="${encodeURIComponent(txt)}">コピー</button>${esc(txt)}</div>`}
+
+function renderOverview(){
+  return `<h2>制作の全体像</h2>
+  <div class="note">推奨順は <b>声(Irodori) → 映像(DomoAI) → 音 → 文字 → FCPX合成</b>。先に声を作ると各ショットの実尺が確定し、DomoAIの生成尺を無駄なく決められます。</div>
+  <ol class="steps">
+    <li><b>企画確認</b>：キャラ・トーンを頭に入れる（01_production-bible）</li>
+    <li><b>声を作る</b>：「音声台本」タブの通りにIrodoriで全ライン生成 → voice-exports/へ保存</li>
+    <li><b>映像を作る</b>：「ショット&プロンプト」タブのkeyframe→I2Vで各ショット生成 → domoai-exports/へ</li>
+    <li><b>音を集める</b>：「音(SE/BGM)」タブの検索ワードでSE/BGM/通知音を用意</li>
+    <li><b>文字を用意</b>：「グラフィック」タブのSVG＋字幕テキスト</li>
+    <li><b>合成</b>：「FCPX合成」タブのタイムライン表どおりに並べる</li>
+    <li><b>グレーディング</b>：全DomoAIクリップに統一グレードで質感をそろえる</li>
+    <li><b>書き出し</b>：H.264 1080×1920 30fps / -14 LUFS で納品</li>
+  </ol>
+  <h2 style="margin-top:22px">タイムライン (35秒)</h2>
+  <div class="tl">
+    <div class="s1" style="flex:4">S1<br>0-4</div><div class="s1" style="flex:4">S1<br>4-8</div>
+    <div class="s2" style="flex:4">S2<br>8-12</div><div class="s2" style="flex:3">S2<br>12-15</div><div class="s2" style="flex:3">S2<br>15-18</div>
+    <div class="s3" style="flex:3">S3<br>18-21</div><div class="s3" style="flex:3">S3★<br>21-24</div>
+    <div class="s4" style="flex:4">S4<br>24-28</div><div class="s4" style="flex:4">S4<br>28-32</div>
+    <div class="s5" style="flex:3">CTA<br>32-35</div>
+  </div>
+  <div class="legend">
+    <span><i class="dot" style="background:#6b5a3f"></i>S1 導入</span>
+    <span><i class="dot" style="background:#8a6d3a"></i>S2 焦り</span>
+    <span><i class="dot" style="background:var(--mint)"></i>S3 発見(明転)</span>
+    <span><i class="dot" style="background:var(--amber)"></i>S4 解決・信頼</span>
+    <span><i class="dot" style="background:#cfc3ad"></i>CTA</span>
+  </div>
+  <div class="note"><b>感情曲線：</b>共感(新人あるある) → 焦り(コミカルに寄せすぎない) → ひらめき → <b>暗→明の爽快な解決</b> → 「頼りになる」の小さなオチ。</div>`;
+}
+
+function renderShots(){
+  return `<h2>ショット & DomoAIプロンプト</h2>
+  <div class="note">実写クリップは <b>SHOT01–09 の9本</b>。各ショット：keyframe画像→I2Vの2段が推奨。SHOT10(CTA)はグラフィックタブのSVGを使用。<br>DomoAI設定：Aspect 9:16 / Duration ショット尺 / Motion Low–Mid / Style Realistic。</div>`+
+  SHOTS.map(s=>`<div class="card">
+    <h3>${s.id} ${s.hero?'<span class="hero">HERO</span>':''}<span class="tc">${s.tc}・${s.dur}</span></h3>
+    <div class="meta"><b>${s.title}</b><br>カメラ：${s.cam}<br>芝居：${s.act}<br>音：${s.audio}</div>
+    ${promptBlock("① KEYFRAME (静止画)",s.key)}
+    ${promptBlock("② I2V MOTION (画像→動画)",s.i2v)}
+    ${promptBlock("③ T2V FALLBACK (文章→動画)",s.t2v)}
+    <div class="checks">
+      ${ck(s.id+"_key","キーフレーム生成")}
+      ${ck(s.id+"_i2v","I2V動画生成")}
+      ${ck(s.id+"_save","domoai-exports/へ保存")}
+    </div>
+  </div>`).join("")+
+  `<div class="card"><div class="plabel">共通 NEGATIVE PROMPT</div>
+    <div class="prompt"><button class="copy" data-copy="${encodeURIComponent(NEG)}">コピー</button>${esc(NEG)}</div></div>`;
+}
+
+function renderVoice(){
+  return `<h2>Irodori 音声台本</h2>
+  <div class="note">各ラインを生成し <b>voice-exports/</b> へ命名規則どおり保存。48kHz推奨・ノーマライズ-3dB目安。読み違いはかな入力に置換。</div>`+
+  VOICE.map(v=>`<div class="card">
+    <h3>${v.who}<span class="tc">${v.id} ・ ${v.len}</span></h3>
+    <div class="prompt"><button class="copy" data-copy="${encodeURIComponent(v.text)}">コピー</button>${esc(v.text)}</div>
+    <div class="meta">読み：${v.read}<br>演出：${v.dir}</div>
+    <div>${v.emo.map(e=>`<span class="emo">${e}</span>`).join("")}</div>
+    <div class="checks">${ck(v.id+"_rec","生成")}${ck(v.id+"_save","保存")}</div>
+  </div>`).join("");
+}
+
+function renderAudio(){
+  return `<h2>SE / BGM キューシート</h2>
+  <div class="note">◎＝キモ音（緊張スティング/スキャンスイープ/<b>ピロン</b>/ブランドウーシュ）。ピロンは通知トーストSVGと<b>同フレーム</b>。最終 -14 LUFS。</div>
+  <table><thead><tr><th>重要</th><th>時刻</th><th>内容</th><th>ファイル名</th><th>済</th></tr></thead><tbody>
+  ${AUDIO.map((a,i)=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td><td><code>${a[3]}</code></td><td><input type="checkbox" data-id="au_${i}" ${store['au_'+i]?'checked':''} style="width:17px;height:17px;accent-color:var(--mint)"></td></tr>`).join("")}
+  </tbody></table>
+  <div class="card" style="margin-top:16px">
+    <h3>★ ピロン通知音スペック</h3>
+    <div class="meta">2音の上行（例：ミ→ソ）・クリーンなベル/マリンバ・0.35〜0.5秒・軽い余韻・BGMの上で抜ける。<b>Bottle Scannerのサウンドロゴ</b>として全バージョン共通で使用。</div>
+  </div>`;
+}
+
+function renderGfx(){
+  const items=[
+    ["../assets/cta-endcard.svg","CTAエンドカード (1080×1920) ─ SHOT10"],
+    ["../assets/ar-scan-overlay.svg","ARスキャンUI オーバーレイ (透過) ─ SHOT07"],
+    ["../assets/notification-toast.svg","成功通知トースト (透過) ─ SHOT07"],
+    ["../assets/logo-lockup.svg","ロゴ・ロックアップ (汎用)"]
+  ];
+  return `<h2>グラフィック素材</h2>
+  <div class="note">ブランドUIはAI生成に頼らず実データSVG。FCPXが直接読めない場合はPNG(必要なら透過)に書き出して使用。字幕は06_graphics-telop-specのスタイルでFCPXタイトル作成。</div>
+  <div class="gv">${items.map(g=>`<div class="gvi"><img src="${g[0]}" alt=""><div class="cap">${g[1]}</div></div>`).join("")}</div>
+  <div class="card" style="margin-top:16px"><h3>字幕テキスト(コピペ用)</h3>
+    ${VOICE.filter(v=>!v.id.startsWith("NA_S5")).map(v=>`<div class="prompt"><button class="copy" data-copy="${encodeURIComponent(v.text)}">コピー</button>${esc(v.text)}</div>`).join("")}
+  </div>`;
+}
+
+function renderFcpx(){
+  const rows=[
+   ["映像","SHOT01–09（ハードカット連結）","L1","0:00→0:32","実写本編9本"],
+   ["オーバーレイ","ar-scan-overlay","L2","0:21–0:24","スキャン枠アニメ"],
+   ["オーバーレイ","notification-toast","L2","0:21.5–0:24","ピロンと同フレーム"],
+   ["字幕","各セリフ7本","L3","セリフに同期","下から約420px"],
+   ["グラフィック","cta-endcard","L4","0:32–0:35","フェードイン"],
+   ["音声","VO_/NA_ 7本","A1","セリフ位置","内語/小声は処理"],
+   ["SE","SE_ 各種","A2","各時刻","◎音を必ず"],
+   ["BGM","BGM_main + room tone","A3","0:00–0:35","ダッキング"]
+  ];
+  return `<h2>FCPX 合成ガイド</h2>
+  <div class="note">プロジェクト：1080×1920 / 30fps / 48kHz。基本ハードカット、CTAのみフェード。0:21で露出・彩度を上げ<b>暗→明の反転</b>を作る。全クリップに統一グレード。</div>
+  <table><thead><tr><th>種別</th><th>素材</th><th>レーン</th><th>位置</th><th>メモ</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join("")}
+  </tbody></table>
+  <div class="card" style="margin-top:16px"><h3>書き出し / 最終QC</h3>
+    <div class="checks">
+      ${ck("qc_len","尺35秒前後")}${ck("qc_sync","字幕とセリフ同期")}${ck("qc_piron","ピロン=トースト同フレーム")}
+      ${ck("qc_flip","0:21の明転が決まる")}${ck("qc_face","顔の一貫性OK")}${ck("qc_safe","セーフエリアOK")}
+      ${ck("qc_loud","-14 LUFS / -1dBTP")}${ck("qc_mute","音声オフでも伝わる")}${ck("qc_export","H.264 1080×1920 書き出し")}
+    </div>
+  </div>`;
+}
+
+const RENDER={overview:renderOverview,shots:renderShots,voice:renderVoice,audio:renderAudio,gfx:renderGfx,fcpx:renderFcpx};
+const tabsEl=document.getElementById("tabs"),mainEl=document.getElementById("main");
+let cur="overview";
+TABS.forEach(([k,label])=>{const d=document.createElement("div");d.className="tab"+(k==cur?" active":"");d.textContent=label;d.onclick=()=>{cur=k;draw()};d.dataset.k=k;tabsEl.appendChild(d)});
+function draw(){
+  [...tabsEl.children].forEach(t=>t.classList.toggle("active",t.dataset.k==cur));
+  mainEl.innerHTML=`<section class="active">${RENDER[cur]()}</section>`;
+  bind();
+}
+function bind(){
+  mainEl.querySelectorAll(".copy").forEach(b=>b.onclick=()=>{
+    const t=decodeURIComponent(b.dataset.copy);
+    navigator.clipboard.writeText(t).then(()=>{b.textContent="コピー済";b.classList.add("ok");setTimeout(()=>{b.textContent="コピー";b.classList.remove("ok")},1200)});
+  });
+  mainEl.querySelectorAll('input[type=checkbox]').forEach(c=>c.onchange=()=>{
+    store[c.dataset.id]=c.checked;save();
+    const lab=c.closest("label.ck");if(lab)lab.classList.toggle("done",c.checked);
+  });
+}
+/* progress across all known checkbox ids */
+function allIds(){
+  let ids=[];
+  SHOTS.forEach(s=>ids.push(s.id+"_key",s.id+"_i2v",s.id+"_save"));
+  VOICE.forEach(v=>ids.push(v.id+"_rec",v.id+"_save"));
+  AUDIO.forEach((a,i)=>ids.push("au_"+i));
+  ["qc_len","qc_sync","qc_piron","qc_flip","qc_face","qc_safe","qc_loud","qc_mute","qc_export"].forEach(x=>ids.push(x));
+  return ids;
+}
+function updateProg(){
+  const ids=allIds(),done=ids.filter(i=>store[i]).length,pct=Math.round(done/ids.length*100);
+  document.getElementById("pf").style.width=pct+"%";
+  document.getElementById("pt").textContent=`進捗 ${pct}%（${done}/${ids.length}）`;
+}
+function resetAll(){if(confirm("進捗をすべてリセットしますか？")){Object.keys(store).forEach(k=>delete store[k]);save();draw()}}
+draw();updateProg();
+</script>
+</body>
+</html>

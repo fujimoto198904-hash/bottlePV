@@ -1,0 +1,66 @@
+<!--
+  Bottle Scanner ─ AR スキャンUI オーバーレイ（全画面 1080x1920・背景透過）
+  用途: SHOT07（0:21–0:24）でスマホ画面 or 画面全体に重ねる
+  重要: 背景は透過。FCPXで映像の上にオーバーレイし、スケール/位置をスマホ画面に合わせる。
+  アニメ演出（FCPX側でキーフレーム）:
+    1) 四隅ブラケットとHUDをフェードイン
+    2) 中央スキャンラインを上→下へ1回スイープ（SE_0020_scan-sweep と同期）
+    3) レティクルを目的ボトルに収束、"MATCH FOUND" を点灯（notification-toast と SE_0021_notify-piron を同フレームで）
+  PNG書き出し: 1080x1920・背景透過PNGでエクスポート
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" font-family="'Roboto Mono','SF Mono',monospace">
+  <defs>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="scanFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3FE0C5" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#3FE0C5" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#3FE0C5" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- frame corner brackets (viewport) -->
+  <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#glow)">
+    <path d="M80,300 V120 H260"/>
+    <path d="M1000,300 V120 H820"/>
+    <path d="M80,1620 V1800 H260"/>
+    <path d="M1000,1620 V1800 H820"/>
+  </g>
+
+  <!-- top HUD -->
+  <g fill="#3FE0C5" filter="url(#glow)">
+    <circle cx="150" cy="230" r="10">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <text x="180" y="240" font-size="34" letter-spacing="6" font-weight="700">SCANNING…</text>
+    <text x="1000" y="240" font-size="30" letter-spacing="3" text-anchor="end" opacity="0.85">BOTTLE SCANNER</text>
+  </g>
+
+  <!-- target reticle locking onto a bottle (upper-center where the target sits) -->
+  <g transform="translate(540,760)">
+    <!-- outer locking box -->
+    <g stroke="#3FE0C5" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#glow)">
+      <path d="M-150,-70 V-230 H10"/>
+      <path d="M150,-70 V-230 H-10"/>
+      <path d="M-150,250 V410 H10"/>
+      <path d="M150,250 V410 H-10"/>
+    </g>
+    <!-- crosshair -->
+    <g stroke="#3FE0C5" stroke-width="3" opacity="0.9">
+      <line x1="-40" y1="90" x2="40" y2="90"/>
+      <line x1="0" y1="50" x2="0" y2="130"/>
+    </g>
+    <!-- MATCH FOUND tag -->
+    <g transform="translate(0,-280)">
+      <rect x="-190" y="-42" width="380" height="66" rx="12" fill="#14110E" opacity="0.9" stroke="#3FE0C5" stroke-width="2"/>
+      <circle cx="-150" cy="-9" r="14" fill="#3FE0C5"/>
+      <path d="M-157,-9 l5,6 l10,-12" fill="none" stroke="#14110E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="-120" y="2" font-size="34" font-weight="700" fill="#3FE0C5" letter-spacing="3">MATCH FOUND</text>
+    </g>
+  </g>
+
+  <!-- moving scan line (FCPXで上下移動アニメを付けてもよい。静止版はここに配置) -->
+  <rect x="80" y="900" width="920" height="60" fill="url(#scanFade)" opacity="0.5"/>
+</svg>
