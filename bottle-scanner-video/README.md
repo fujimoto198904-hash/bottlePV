@@ -20,10 +20,13 @@
 | 05 | `05_se-bgm-cue-sheet.md` | SE/BGMキューシート・通知音スペック | 音の素材を集めるとき |
 | 06 | `06_graphics-telop-spec.md` | テロップ・字幕・CTAコピー・デザイン仕様 | 文字とグラフィックを載せるとき |
 | 07 | `07_fcpx-assembly-guide.md` | FCPXタイムライン構成・グレーディング・書き出し設定 | 最終合成のとき |
+| 08 | `08_16x9-version-guide.md` | 16:9併用版の構図リフレーム・設定・素材 | 横型も出すとき |
 | — | `assets/` | 実データ素材（AR UI・ロゴ・CTA のSVG） | FCPXに読み込む |
-| — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等） | FCPXがSVGを読めない時はこちら |
-| — | `subtitles/` | 字幕 **SRT**（FCPXにドラッグ読み込み可） | 字幕を載せるとき |
-| — | `alt-versions/` | 別バージョン台本（ベテラン自慢版／満席の夜版） | 横展開するとき |
+| — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等）＋サムネPNG | FCPXがSVGを読めない時はこちら |
+| — | `assets/16x9/` | 16:9版のCTA・ARオーバーレイ（SVG＋PNG） | 16:9併用版のとき |
+| — | `assets/thumbnail-9x16.svg` / `thumbnail-16x9.svg` | サムネ／カバー画像（フック付き） | SNS投稿・YouTube |
+| — | `subtitles/` | 字幕 **SRT**（本編＋altA/altB/altE英語） | 字幕を載せるとき |
+| — | `alt-versions/` | 別バージョン台本5本（ベテラン/満席/女性店長/記念日/英語） | 横展開するとき |
 | — | `dashboard/index.html` | 制作ダッシュボード（全部入りUI・進捗管理） | 制作中つねに開いておく |
 | — | `voice-exports/` | Irodoriから書き出した音声の置き場（命名規則あり） | 音声を保存する |
 | — | `domoai-exports/` | DomoAIから書き出した映像クリップの置き場（命名規則あり） | 映像を保存する |

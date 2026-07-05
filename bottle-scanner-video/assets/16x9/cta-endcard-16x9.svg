@@ -1,0 +1,53 @@
+<!--
+  Bottle Scanner ─ CTAエンドカード 16:9版（1920x1080）
+  用途: 16:9併用版のSHOT10でフェードイン。9:16版と同一トーン。
+  PNG書き出し: 1920x1080 PNG
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080" font-family="'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',sans-serif">
+  <defs>
+    <radialGradient id="bg9" cx="0.42" cy="0.5" r="0.85">
+      <stop offset="0" stop-color="#26201A"/>
+      <stop offset="1" stop-color="#100D0A"/>
+    </radialGradient>
+    <linearGradient id="amberGrad9" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F1C978"/><stop offset="1" stop-color="#D99A34"/>
+    </linearGradient>
+    <filter id="softGlow9" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="bokehBlur9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#bg9)"/>
+  <g filter="url(#bokehBlur9)" opacity="0.5">
+    <circle cx="300" cy="200" r="80" fill="#E8B451" opacity="0.45"/>
+    <circle cx="1650" cy="240" r="60" fill="#3FE0C5" opacity="0.4"/>
+    <circle cx="1720" cy="880" r="100" fill="#E8B451" opacity="0.3"/>
+    <circle cx="240" cy="900" r="70" fill="#3FE0C5" opacity="0.3"/>
+  </g>
+
+  <!-- ICON left -->
+  <g transform="translate(360,300) scale(1.9)">
+    <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#softGlow9)">
+      <path d="M8,70 V8 H70"/><path d="M192,70 V8 H130"/><path d="M8,196 V258 H70"/><path d="M192,196 V258 H130"/>
+    </g>
+    <line x1="18" y1="133" x2="182" y2="133" stroke="#3FE0C5" stroke-width="3" opacity="0.7"/>
+    <path d="M86,34 H114 V80 C114,80 134,92 134,118 V198 C134,210 125,218 113,218 H87 C75,218 66,210 66,198 V118 C66,92 86,80 86,80 Z"
+          fill="url(#amberGrad9)" stroke="#14110E" stroke-width="2"/>
+    <rect x="84" y="22" width="32" height="16" rx="4" fill="#3FE0C5"/>
+    <rect x="78" y="142" width="44" height="52" rx="6" fill="#14110E" opacity="0.85"/>
+    <path d="M88,168 l7,8 l14,-16" fill="none" stroke="#3FE0C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- TEXT right -->
+  <g>
+    <text x="820" y="360" font-size="110" font-weight="800" fill="#F5EFE6" letter-spacing="-2">Bottle <tspan fill="#E8B451">Scanner</tspan></text>
+    <line x1="824" y1="410" x2="1500" y2="410" stroke="#3FE0C5" stroke-width="3" opacity="0.8"/>
+    <text x="820" y="540" font-size="66" font-weight="800" fill="#F5EFE6">探す時間を、<tspan fill="#E8B451">おもてなしの時間に。</tspan></text>
+    <text x="824" y="630" font-size="42" font-weight="600" fill="#F5EFE6" opacity="0.9">ボトルキープ、もう迷わない。</text>
+    <g transform="translate(1080,760)">
+      <rect x="-300" y="-58" width="600" height="116" rx="58" fill="#3FE0C5"/>
+      <text x="0" y="15" font-size="46" font-weight="800" fill="#14110E" text-anchor="middle">詳しくはプロフィールから</text>
+    </g>
+  </g>
+</svg>

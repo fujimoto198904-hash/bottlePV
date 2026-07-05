@@ -1,6 +1,13 @@
 # subtitles/
 
-`bottle-scanner_ja.srt` … 本編7セリフの字幕（タイムコードは `07_fcpx-assembly-guide.md` の配置表準拠）。
+| ファイル | 対象 |
+|---------|------|
+| `bottle-scanner_ja.srt` | 本編（日本語・7セリフ） |
+| `altA_veteran-brag_ja.srt` | 別版A ベテラン自慢版（日本語） |
+| `altB_busy-night_ja.srt` | 別版B 満席の忙しい夜版（日本語） |
+| `altE_english.srt` | 別版E 英語ナレーション版（English） |
+
+タイムコードは各台本／`07_fcpx-assembly-guide.md` の配置表準拠。
 
 ## FCPXへの読み込み
 1. FCPXのメニュー **ファイル → 字幕を読み込む → SRTファイル** で `bottle-scanner_ja.srt` を選択
