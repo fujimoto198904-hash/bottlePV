@@ -65,6 +65,10 @@
   #ctrls{display:flex;align-items:center;gap:12px}
   button{background:#1D1913;border:1px solid #3a3228;color:var(--ink);border-radius:9px;padding:8px 14px;font-size:14px;cursor:pointer;font-weight:700}
   button:hover{border-color:var(--mint)}
+  /* export mode: full-frame stage only (for video capture) */
+  body.export #bar{display:none}
+  body.export #wrap{padding:0;gap:0}
+  body.export #stageWrap{height:100%;max-width:none;border-radius:0;box-shadow:none}
   #play{background:var(--mint);color:var(--char);border-color:var(--mint);min-width:96px}
   #tcode{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;margin-left:auto}
   .hint{color:#6a6255;font-size:12px;text-align:center}
@@ -257,7 +261,12 @@ $("restart").onclick=()=>{ t=0; render(); if(playing){clearAudio();scheduleAudio
 $("tl").onclick=e=>{ const r=$("tl").getBoundingClientRect(); t=Math.max(0,Math.min(DUR,(e.clientX-r.left)/r.width*DUR));
   render(); if(playing){clearAudio();scheduleAudio(t);last=performance.now();} };
 render();
-if(location.hash.startsWith("#t=")){ t=parseFloat(location.hash.slice(3))||0; render(); }
+// deep-link / export: #t=SS(&export=1) sets a static frame; export hides controls for video capture
+(function(){
+  const hp=new URLSearchParams(location.hash.slice(1));
+  if(hp.has("export")) document.body.classList.add("export");
+  if(hp.has("t")){ t=parseFloat(hp.get("t"))||0; render(); }
+})();
 </script>
 </body>
 </html>
