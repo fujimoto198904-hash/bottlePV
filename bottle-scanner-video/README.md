@@ -21,6 +21,9 @@
 | 06 | `06_graphics-telop-spec.md` | テロップ・字幕・CTAコピー・デザイン仕様 | 文字とグラフィックを載せるとき |
 | 07 | `07_fcpx-assembly-guide.md` | FCPXタイムライン構成・グレーディング・書き出し設定 | 最終合成のとき |
 | — | `assets/` | 実データ素材（AR UI・ロゴ・CTA のSVG） | FCPXに読み込む |
+| — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等） | FCPXがSVGを読めない時はこちら |
+| — | `subtitles/` | 字幕 **SRT**（FCPXにドラッグ読み込み可） | 字幕を載せるとき |
+| — | `alt-versions/` | 別バージョン台本（ベテラン自慢版／満席の夜版） | 横展開するとき |
 | — | `dashboard/index.html` | 制作ダッシュボード（全部入りUI・進捗管理） | 制作中つねに開いておく |
 | — | `voice-exports/` | Irodoriから書き出した音声の置き場（命名規則あり） | 音声を保存する |
 | — | `domoai-exports/` | DomoAIから書き出した映像クリップの置き場（命名規則あり） | 映像を保存する |
