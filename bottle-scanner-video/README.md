@@ -16,6 +16,7 @@
 | 01 | `01_production-bible.md` | 企画・フォーマット仕様・キャラ設定・ライティング指針 | 制作前に方向性を固める |
 | 02 | `02_shot-list.md` | 10ショットの絵コンテ表（タイムコード付き） | 撮る順番・尺の設計図 |
 | 03 | `03_domoai-prompts.md` | DomoAI用プロンプト（keyframe画像＋I2V動作＋T2V予備） | DomoAIで映像を作るとき |
+| 03b | `domoai-prompt-bank-100.md` | **DomoAI生成プロンプト100本**（画角違い/別版/Bロール/CTA背景） | 当たりテイクを引く・素材を盛る |
 | 04 | `04_irodori-voice-script.md` | Irodori用 音声台本（キャラ別・感情・速度・読み） | Irodoriで声を作るとき |
 | 05 | `05_se-bgm-cue-sheet.md` | SE/BGMキューシート・通知音スペック | 音の素材を集めるとき |
 | 06 | `06_graphics-telop-spec.md` | テロップ・字幕・CTAコピー・デザイン仕様 | 文字とグラフィックを載せるとき |
