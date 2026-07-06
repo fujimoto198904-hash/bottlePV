@@ -22,6 +22,7 @@
 | 06 | `06_graphics-telop-spec.md` | テロップ・字幕・CTAコピー・デザイン仕様 | 文字とグラフィックを載せるとき |
 | 07 | `07_fcpx-assembly-guide.md` | FCPXタイムライン構成・グレーディング・書き出し設定 | 最終合成のとき |
 | 08 | `08_16x9-version-guide.md` | 16:9併用版の構図リフレーム・設定・素材 | 横型も出すとき |
+| 09 | `09_domoai-generation-brief.md` | **DomoAI生成ブリーフ**（ネット開放環境のClaudeに実生成させる指示） | 別チャットで映像を生成させるとき |
 | — | `assets/` | 実データ素材（AR UI・ロゴ・CTA のSVG） | FCPXに読み込む |
 | — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等）＋サムネPNG | FCPXがSVGを読めない時はこちら |
 | — | `assets/16x9/` | 16:9版のCTA・ARオーバーレイ（SVG＋PNG） | 16:9併用版のとき |
