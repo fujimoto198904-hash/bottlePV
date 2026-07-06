@@ -1,0 +1,600 @@
+{
+  "version": 1,
+  "jobs": [
+    {
+      "id": "base_kenji",
+      "kind": "base_face",
+      "stage": 1,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": null,
+      "label": "ケンジ（新人・20代男）",
+      "prompt": "Photorealistic portrait of a Japanese man in his mid-20s, short neat black hair, clean-shaven, slim, youthful earnest face, wearing a crisp white dress shirt and a fitted black waistcoat with a black bartender apron, warm soft lighting, simple dark neutral background, natural detailed skin texture, sharp focus on the face, 85mm portrait lens, cinematic, high detail",
+      "negative": "cartoon, anime, illustration, 3d, cgi, plastic skin, extra fingers, deformed hands, distorted face, text, watermark, low quality, blurry",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "base_kenji.png",
+      "depends_on": [],
+      "reference_images": [],
+      "job_hash": "635a201dce5d",
+      "seed": 4172721470836038799,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "base_manami",
+      "kind": "base_face",
+      "stage": 1,
+      "character": "manami",
+      "characters": [
+        "manami"
+      ],
+      "shot": null,
+      "label": "マナミ（常連・30代女）",
+      "prompt": "Photorealistic portrait of an elegant Japanese woman in her early 30s, shoulder-length wavy dark-brown hair, refined natural makeup, wearing a deep wine-red silk blouse, warm composed expression, soft flattering lighting, simple dark neutral background, natural detailed skin texture, sharp focus on the face, 85mm portrait lens, cinematic, high detail",
+      "negative": "cartoon, anime, illustration, 3d, cgi, plastic skin, extra fingers, deformed hands, distorted face, text, watermark, low quality, blurry",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "base_manami.png",
+      "depends_on": [],
+      "reference_images": [],
+      "job_hash": "7db2947f21dd",
+      "seed": 3782389537458934708,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "base_takashi",
+      "kind": "base_face",
+      "stage": 1,
+      "character": "takashi",
+      "characters": [
+        "takashi"
+      ],
+      "shot": null,
+      "label": "タカシ（店長・40代後半男）",
+      "prompt": "Photorealistic portrait of a distinguished Japanese man in his late 40s, short salt-and-pepper hair, a well-groomed short grey beard, wearing a black shirt and a dark sommelier apron, calm experienced expression, warm soft lighting, simple dark neutral background, natural detailed skin texture, sharp focus on the face, 85mm portrait lens, cinematic, high detail",
+      "negative": "cartoon, anime, illustration, 3d, cgi, plastic skin, extra fingers, deformed hands, distorted face, text, watermark, low quality, blurry",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "base_takashi.png",
+      "depends_on": [],
+      "reference_images": [],
+      "job_hash": "7430e507a48d",
+      "seed": 7027939734085636924,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT01",
+      "kind": "still",
+      "stage": 2,
+      "character": "manami",
+      "characters": [
+        "manami"
+      ],
+      "shot": "SHOT01",
+      "label": "establishing / マナミの穏やかな注文",
+      "prompt": "Cinematic medium shot, an elegant Japanese woman in her early 30s, shoulder-length wavy dark-brown hair, refined natural makeup, wearing a deep wine-red silk blouse, seated at the bar counter with a whisky glass in front of her, warm and composed, gently placing an order, inside an upscale intimate Japanese whisky bar at night, dark polished wood counter, brass fixtures, a large back-shelf wall filled with rows of kept whisky bottles each with a small paper name tag, warm bottle bokeh in the background, moody low-key ambience, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT01.png",
+      "depends_on": [
+        "base_manami"
+      ],
+      "reference_images": [
+        "base_manami.png"
+      ],
+      "job_hash": "1399bddf7541",
+      "seed": 7637203380119297307,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT02",
+      "kind": "still",
+      "stage": 2,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT02",
+      "label": "ケンジが棚を振り返りボトルの壁で固まる",
+      "prompt": "Cinematic bust shot from behind the bar, a Japanese man in his mid-20s, short neat black hair, clean-shaven, slim build, wearing a crisp white dress shirt with rolled sleeves and a fitted black waistcoat and a black bartender apron, youthful earnest face, just turned around to face a huge back-shelf wall filled with dozens of rows of kept whisky bottles each with a small paper name tag, his expression stiffening with quiet panic, overwhelmed, inside an upscale intimate Japanese whisky bar at night, dark polished wood counter, brass fixtures, warm bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT02.png",
+      "depends_on": [
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_kenji.png"
+      ],
+      "job_hash": "6b7a6602c26c",
+      "seed": 7446696083898428886,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT03",
+      "kind": "still",
+      "stage": 2,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT03",
+      "label": "ラベルを一本ずつ確認する焦り（手元クロース）",
+      "prompt": "Cinematic close-up of a Japanese man in his mid-20s, short neat black hair, clean-shaven, in a white dress shirt with rolled sleeves and black waistcoat, his finger tracing along the small paper name tags of kept whisky bottles on a shelf, eyes darting nervously, a faint sweat on his forehead, growing anxiety, inside an upscale whisky bar at night, dark wood, brass, warm bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT03.png",
+      "depends_on": [
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_kenji.png"
+      ],
+      "job_hash": "b68679bfb7fd",
+      "seed": 6455249726747549874,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT04",
+      "kind": "still",
+      "stage": 2,
+      "character": "manami",
+      "characters": [
+        "manami"
+      ],
+      "shot": "SHOT04",
+      "label": "マナミがチラッと時間を見る",
+      "prompt": "Cinematic close-up of an elegant Japanese woman in her early 30s, wavy dark-brown hair, wine-red silk blouse, seated at a bar counter, glancing down at her wristwatch with a subtle patient look, not annoyed, refined, inside an upscale whisky bar at night, warm amber lighting, brass fixtures, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT04.png",
+      "depends_on": [
+        "base_manami"
+      ],
+      "reference_images": [
+        "base_manami.png"
+      ],
+      "job_hash": "fe45630634b9",
+      "seed": 2299400874388846728,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT05",
+      "kind": "still",
+      "stage": 2,
+      "character": "takashi",
+      "characters": [
+        "takashi",
+        "kenji"
+      ],
+      "shot": "SHOT05",
+      "label": "タカシが気づいて小声で気遣う（奥にケンジ）",
+      "prompt": "Cinematic shot of a distinguished Japanese man in his late 40s, short salt-and-pepper hair, a well-groomed short grey beard, wearing a black shirt and dark sommelier apron, standing a little apart behind the bar, glancing with a slightly furrowed concerned brow toward a young bartender blurred in the background, inside an upscale whisky bar at night, warm amber lighting, brass, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, warm amber tungsten key light, low-key moody lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT05.png",
+      "depends_on": [
+        "base_takashi",
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_takashi.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "e7831e5fbcbd",
+      "seed": 3563051269282477763,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT06",
+      "kind": "still",
+      "stage": 2,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT06",
+      "label": "ひらめいてスマホを取り出す",
+      "prompt": "Cinematic close-up of a Japanese man in his mid-20s, short neat black hair, white dress shirt and black waistcoat, a sudden spark of realization on his face, reaching into his apron pocket to pull out a smartphone, inside an upscale whisky bar at night, warm amber lighting starting to mix with a faint cool phone-screen glow on his face, brass, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT06.png",
+      "depends_on": [
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_kenji.png"
+      ],
+      "job_hash": "9c61b21fa74a",
+      "seed": 7672774854249785131,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT07",
+      "kind": "still",
+      "stage": 2,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT07",
+      "label": "★ヒーローショット AR発見（スマホ画面はFCPXでUI合成／余白を残す）",
+      "prompt": "Cinematic over-the-shoulder shot of a Japanese man in his mid-20s, white dress shirt and black waistcoat, holding up a smartphone toward a wall of kept whisky bottles, his face lit brighter now with a cool mint-cyan glow from the screen mixing with warm amber, an expression of relief and delight beginning, the bottle shelf in front sharp and inviting, inside an upscale whisky bar at night, brass, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, brighter uplifting lighting, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT07.png",
+      "depends_on": [
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_kenji.png"
+      ],
+      "job_hash": "d110c7db0d82",
+      "seed": 6781380932259153316,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT08",
+      "kind": "still",
+      "stage": 2,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT08",
+      "label": "ボトルを取りカウンターへ提供（自信）",
+      "prompt": "Cinematic medium shot of a Japanese man in his mid-20s, white dress shirt and black waistcoat and bartender apron, confidently taking a specific whisky bottle from the shelf and setting it down on the polished bar counter in front of a customer, self-assured posture, inside an upscale whisky bar at night, warm and now brighter inviting lighting, brass, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT08.png",
+      "depends_on": [
+        "base_kenji"
+      ],
+      "reference_images": [
+        "base_kenji.png"
+      ],
+      "job_hash": "81032d1516e7",
+      "seed": 8210512811547340958,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "still_SHOT09",
+      "kind": "still",
+      "stage": 2,
+      "character": "manami",
+      "characters": [
+        "manami",
+        "takashi"
+      ],
+      "shot": "SHOT09",
+      "label": "マナミの笑顔／奥でタカシのうなずき（オチ）",
+      "prompt": "Cinematic close-up of an elegant Japanese woman in her early 30s, wavy dark-brown hair, wine-red silk blouse, seated at the bar, looking up with a genuine warm delighted smile, and softly out of focus in the background a distinguished late-40s Japanese man with salt-and-pepper hair and grey beard in a black shirt nodding with quiet satisfaction, inside an upscale whisky bar at night, warm bright happy lighting, brass, bottle bokeh, shot on ARRI Alexa, 35mm anamorphic lens, cinematic film color grade, shallow depth of field, subtle film grain, photorealistic, ultra detailed skin texture, vertical 9:16 composition, professional cinematography, 8k",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": null,
+      "output": "still_SHOT09.png",
+      "depends_on": [
+        "base_manami",
+        "base_takashi"
+      ],
+      "reference_images": [
+        "base_manami.png",
+        "base_takashi.png"
+      ],
+      "job_hash": "2b1d497abc9b",
+      "seed": 7299827985366017179,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT01",
+      "kind": "clip",
+      "stage": 3,
+      "character": "manami",
+      "characters": [
+        "manami"
+      ],
+      "shot": "SHOT01",
+      "label": "establishing / マナミの穏やかな注文",
+      "prompt": "slow subtle dolly-in toward the woman, she calmly speaks and gives a small warm gesture, gentle candle flicker on the bottles behind, very subtle head movement, cinematic, minimal camera shake, natural micro-expressions",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 4,
+      "output": "SHOT01_manami-order.mp4",
+      "depends_on": [
+        "still_SHOT01"
+      ],
+      "reference_images": [
+        "still_SHOT01.png",
+        "base_manami.png"
+      ],
+      "job_hash": "a8bcd7045b3d",
+      "seed": 2124193064778562833,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT02",
+      "kind": "clip",
+      "stage": 3,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT02",
+      "label": "ケンジが棚を振り返りボトルの壁で固まる",
+      "prompt": "the young bartender turns his head toward the bottle wall then freezes, rack focus from his face to the overwhelming wall of bottles behind, tiny nervous swallow, subtle breathing, very slight handheld feel, cinematic, no large movement",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 4,
+      "output": "SHOT02_kenji-freeze.mp4",
+      "depends_on": [
+        "still_SHOT02"
+      ],
+      "reference_images": [
+        "still_SHOT02.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "7c5edd0eadc2",
+      "seed": 7434535728593211079,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT03",
+      "kind": "clip",
+      "stage": 3,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT03",
+      "label": "ラベルを一本ずつ確認する焦り（手元クロース）",
+      "prompt": "his finger slides across the bottle name tags one by one, eyes flicking left and right with rising worry, subtle nervous breathing, tiny handheld camera sway to build tension, cinematic, small realistic movements only",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 4,
+      "output": "SHOT03_kenji-checking.mp4",
+      "depends_on": [
+        "still_SHOT03"
+      ],
+      "reference_images": [
+        "still_SHOT03.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "78c8d6fe2e24",
+      "seed": 6263564213529758185,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT04",
+      "kind": "clip",
+      "stage": 3,
+      "character": "manami",
+      "characters": [
+        "manami"
+      ],
+      "shot": "SHOT04",
+      "label": "マナミがチラッと時間を見る",
+      "prompt": "she subtly lowers her eyes to check the time then looks back up toward the bar, a small patient breath, very gentle movement, warm candle flicker, cinematic, minimal motion",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 3,
+      "output": "SHOT04_manami-glance.mp4",
+      "depends_on": [
+        "still_SHOT04"
+      ],
+      "reference_images": [
+        "still_SHOT04.png",
+        "base_manami.png"
+      ],
+      "job_hash": "da7efdb14a81",
+      "seed": 3142700538356774627,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT05",
+      "kind": "clip",
+      "stage": 3,
+      "character": "takashi",
+      "characters": [
+        "takashi",
+        "kenji"
+      ],
+      "shot": "SHOT05",
+      "label": "タカシが気づいて小声で気遣う（奥にケンジ）",
+      "prompt": "the veteran manager notices, brow furrows slightly with concern, he leans in a touch and speaks quietly, very subtle head turn toward the younger staff, cinematic, small realistic movement",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 3,
+      "output": "SHOT05_takashi-concern.mp4",
+      "depends_on": [
+        "still_SHOT05"
+      ],
+      "reference_images": [
+        "still_SHOT05.png",
+        "base_takashi.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "b5eefd593f50",
+      "seed": 2282486551376111969,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT06",
+      "kind": "clip",
+      "stage": 3,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT06",
+      "label": "ひらめいてスマホを取り出す",
+      "prompt": "his eyes light up with an idea, he quickly pulls a smartphone from his pocket and raises it, a faint cool glow begins to touch his face, decisive small movement, cinematic, natural motion",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 3,
+      "output": "SHOT06_kenji-idea.mp4",
+      "depends_on": [
+        "still_SHOT06"
+      ],
+      "reference_images": [
+        "still_SHOT06.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "a21d1e312477",
+      "seed": 6287204543655025245,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT07",
+      "kind": "clip",
+      "stage": 3,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT07",
+      "label": "★ヒーローショット AR発見（スマホ画面はFCPXでUI合成／余白を残す）",
+      "prompt": "he holds the phone steady toward the shelf, his face brightens into relief and a small smile, the lighting subtly lifts from dark to bright, a gentle push-in toward the target bottle, cinematic, smooth minimal motion, leave clean space on the phone screen for a UI overlay",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 3,
+      "output": "SHOT07_kenji-scan.mp4",
+      "depends_on": [
+        "still_SHOT07"
+      ],
+      "reference_images": [
+        "still_SHOT07.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "86bccb887997",
+      "seed": 462503598817679771,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT08",
+      "kind": "clip",
+      "stage": 3,
+      "character": "kenji",
+      "characters": [
+        "kenji"
+      ],
+      "shot": "SHOT08",
+      "label": "ボトルを取りカウンターへ提供（自信）",
+      "prompt": "he decisively takes the bottle, turns and places it gently on the counter with a confident motion, a slight professional nod, warmer brighter light, cinematic, smooth natural movement",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 4,
+      "output": "SHOT08_kenji-serve.mp4",
+      "depends_on": [
+        "still_SHOT08"
+      ],
+      "reference_images": [
+        "still_SHOT08.png",
+        "base_kenji.png"
+      ],
+      "job_hash": "a4dad11361a1",
+      "seed": 6463924586865839301,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    },
+    {
+      "id": "clip_SHOT09",
+      "kind": "clip",
+      "stage": 3,
+      "character": "manami",
+      "characters": [
+        "manami",
+        "takashi"
+      ],
+      "shot": "SHOT09",
+      "label": "マナミの笑顔／奥でタカシのうなずき（オチ）",
+      "prompt": "the woman looks up and breaks into a warm genuine smile, in the soft background the veteran manager gives a small satisfied nod, gentle warm ambience, cinematic, natural micro-expressions, minimal camera motion",
+      "negative": "cartoon, anime, illustration, 3d render, cgi, plastic skin, waxy skin, extra fingers, deformed hands, mutated hands, distorted face, cross-eyed, text, watermark, logo, subtitles, oversaturated, flat lighting, harsh flash, low quality, blurry, jpeg artifacts, duplicated person",
+      "aspect_ratio": "9:16",
+      "duration_s": 4,
+      "output": "SHOT09_manami-thanks.mp4",
+      "depends_on": [
+        "still_SHOT09"
+      ],
+      "reference_images": [
+        "still_SHOT09.png",
+        "base_manami.png",
+        "base_takashi.png"
+      ],
+      "job_hash": "70ba5a884bfa",
+      "seed": 9015402735628850090,
+      "status": "pending",
+      "notes": "",
+      "result": {},
+      "attempts": 0
+    }
+  ]
+}

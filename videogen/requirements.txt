@@ -1,0 +1,16 @@
+# videogen ハーネス本体（cli.py / pipeline/*）は追加依存ゼロで動く
+#   - Python 3.9+（システム python3 で可）
+#   - ffmpeg / ffprobe（validate.py・faceguard のフレーム抽出に使用。brew で導入済み想定）
+#
+# 顔一貫性ガード（pipeline/faceguard.py）を機械判定で使う場合のみ、任意で以下を導入。
+# 未導入でも faceguard は「skipped（人手承認へ）」で安全に動作する。
+#   uv pip install insightface onnxruntime opencv-python-headless numpy
+#
+# insightface（ArcFace 顔埋め込み）
+# onnxruntime（推論ランタイム / CPU）
+# opencv-python-headless（画像読み込み）
+# numpy（cosine 類似度）
+#
+# 将来の API バックエンド（pipeline/backends/）を実装する場合の想定:
+#   fal-client        # fal.ai 統一鍵（Nano Banana Pro / Kling O1 / Seedream 等）
+#   replicate         # Luma Ray3 / Runway Gen-4 の補欠

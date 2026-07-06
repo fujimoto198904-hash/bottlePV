@@ -1,0 +1,5 @@
+# 生成物の一時置き場。確定物は deliver で domoai-exports/ へ納品するので、
+# ここの生成メディアは git 管理しない（ディレクトリだけ残す）。
+*
+!.gitignore
+!README.md
