@@ -8,6 +8,7 @@ Bar向けアプリ「**Bottle Scanner**」プロモ用ショートドラマ動�
 - **`bottle-scanner-video/`** … 制作素材・指示書・管理システム一式（本体）
   - まずは `bottle-scanner-video/README.md` を読む
   - 制作中は `bottle-scanner-video/dashboard/index.html` をブラウザで開く（プロンプト/台本コピー・進捗管理）
+- **`DOMOAI-CHAT-BRIEF.md`** … ★DomoAIで映像を生成するチャット用の完全ブリーフ（全貌＋生成指示＋連携）
 - **`HANDOFF.md`** … プロジェクトの現状・確定事項・引き継ぎメモ
 - **`NEW-CHAT-KICKOFF.md`** … 別チャットで再開する際のキックオフ用プロンプト
 
