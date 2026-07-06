@@ -66,9 +66,9 @@ manifest の `reference_images` が各ジョブに「どの基準顔を参照に
 - **既知のトレードオフ**：DomoAIのToSはbot自動化・スクレイピングを明文で禁止（BANリスク）。
   SPA/キュー/Cloudflareで自動化は不安定。半自動（人が最終操作、Claudeが下書き/整理）推奨。
 
-### 4.2 代替（API化する場合の推奨スタック）※将来 `pipeline/backends/` に実装
-API鍵を用意すれば、ハーネスの `generate` 段をAPI呼び出しに替えるだけで移行できる。
-2026-07時点の調査結論：
+### 4.2 代替（API化する場合の推奨スタック）※`pipeline/backends/fal_backend.py` に実装済み
+API鍵を用意すれば `generate --backend fal` に切り替えるだけで移行できる（鍵なしでも
+`--dry-run` で送信内容を確認可）。実装したモデル対応と、2026-07時点の調査結論：
 
 | 段 | 推奨 | 補欠 | 実費目安 |
 |---|---|---|---|

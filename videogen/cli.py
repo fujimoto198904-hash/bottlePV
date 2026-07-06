@@ -30,10 +30,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
+from pipeline import backends as backends_mod  # noqa: E402
 from pipeline import deliver as deliver_mod  # noqa: E402
 from pipeline import faceguard as fg  # noqa: E402
 from pipeline import manifest as mani  # noqa: E402
 from pipeline import validate as val  # noqa: E402
+from pipeline.backends import GenerationError  # noqa: E402
 
 MANIFEST = ROOT / "manifest.json"
 OUTPUT_DIR = ROOT / "output"
@@ -187,6 +189,107 @@ def cmd_faceguard(args) -> None:
         print("     導入: uv pip install insightface onnxruntime opencv-python-headless")
 
 
+def _run_faceguard(job: dict, path: str):
+    """still/clip の顔一貫性チェック。base_face や基準顔欠落なら None。"""
+    if job["kind"] not in ("still", "clip"):
+        return None
+    ref = OUTPUT_DIR / f"base_{job['character']}.png"
+    if not ref.exists():
+        return None
+    return fg.check_identity(path, ref)
+
+
+def cmd_generate(args) -> None:
+    rows = _rows()
+    try:
+        backend = backends_mod.get_backend(args.backend)
+    except KeyError as e:
+        print(e, file=sys.stderr)
+        sys.exit(2)
+    ok, why = backend.available()
+    print(f"backend={backend.name} ({backend.mode}) — {why}")
+    if not ok and not args.dry_run:
+        print("→ 利用不可。依存導入/鍵設定の上で再実行、または --backend chrome を使う。", file=sys.stderr)
+        sys.exit(2)
+
+    # 対象選定
+    if args.id:
+        targets = [r for r in rows if r["id"] == args.id]
+        if not targets:
+            print(f"ジョブが無い: {args.id}", file=sys.stderr)
+            sys.exit(2)
+    else:
+        targets = mani.ready_jobs(rows)
+        if args.stage:
+            targets = [r for r in targets if r["stage"] == args.stage]
+        targets = targets[: args.limit]
+    if not targets:
+        print("対象ジョブなし（依存待ち or 全完了）。`status` で確認。")
+        return
+
+    # 手動バックエンド: 指示を出すだけ
+    if backend.mode == "manual":
+        print(f"\n▼ 手動生成する {len(targets)} 件（Web UIで生成→output/へ保存→`set <id> needs_review`）\n")
+        for r in targets:
+            print(_paste_block(r))
+            print()
+        print("手順詳細: videogen/chrome_control/PLAYBOOK.md")
+        return
+
+    # 自動バックエンド（fal 等）: 生成→検証→顔ガード→リトライ
+    for r in targets:
+        print(f"\n=== {r['id']} ({r['output']}) ===")
+        base_seed = r.get("seed") or 0
+        for attempt in range(1, args.max_retries + 1):
+            job = dict(r, seed=base_seed + (attempt - 1))  # リトライで別テイク
+            if not args.dry_run:
+                mani.update(MANIFEST, r["id"], status="generating", attempts=attempt)
+            try:
+                res = backend.generate(job, OUTPUT_DIR, dry_run=args.dry_run)
+            except GenerationError as e:
+                print(f"  attempt {attempt}: 失敗 — {e}")
+                if attempt >= args.max_retries and not args.dry_run:
+                    mani.update(MANIFEST, r["id"], status="failed",
+                                notes=f"生成失敗: {e}")
+                continue
+
+            if args.dry_run:
+                print(f"  [dry-run] model={res['tool']}")
+                print(f"  args={res.get('arguments')}")
+                break
+
+            ok_v, problems = val.check(r, OUTPUT_DIR)
+            fv = _run_faceguard(r, res["path"])
+            fv_txt = "" if fv is None else f" / face:{ {True:'OK',False:'NG',None:'skip'}[fv.ok] }({fv.similarity})"
+            print(f"  attempt {attempt}: 生成OK [{res['tool']}] valid={'OK' if ok_v else 'NG'}{fv_txt}")
+            for p in problems:
+                print(f"      - {p}")
+
+            hard_bad = not ok_v
+            face_bad = fv is not None and fv.ok is False
+            if (hard_bad or face_bad) and attempt < args.max_retries:
+                print("      → 再生成（別seed/テイク）")
+                continue
+
+            # 確定
+            result = {"url": res.get("raw", {}).get("url"), "tool": res["tool"],
+                      "used_seed": job["seed"], "face_similarity": (fv.similarity if fv else None)}
+            if args.auto_approve and ok_v and (fv is None or fv.ok is not False):
+                status = "approved"
+            else:
+                status = "needs_review"
+            note = ""
+            if face_bad:
+                note = f"顔ガードNG({fv.similarity}) 人手確認要"
+            elif hard_bad:
+                note = "検証NG 人手確認要"
+            mani.update(MANIFEST, r["id"], status=status, result=result,
+                        seed=job["seed"], notes=note)
+            print(f"  → {status}" + (f"（{note}）" if note else ""))
+            break
+    print("\n完了。`status` で確認、承認は `set <id> approved`、納品は `deliver`。")
+
+
 def cmd_deliver(args) -> None:
     rows = _rows()
     dest = Path(args.dest) if args.dest else DEFAULT_DEST
@@ -237,6 +340,19 @@ def main(argv=None) -> None:
     f = sub.add_parser("faceguard", help="顔一貫性チェック")
     f.add_argument("job_id")
     f.set_defaults(func=cmd_faceguard)
+
+    g = sub.add_parser("generate", help="生成を実行（chrome=指示出し / fal=自動生成）")
+    g.add_argument("--backend", default="chrome", choices=backends_mod.names(),
+                   help="生成バックエンド（既定 chrome=手動）")
+    g.add_argument("--id", help="特定ジョブのみ（省略時は次に着手できるジョブ）")
+    g.add_argument("--stage", type=int, choices=(1, 2, 3), help="この段のみ")
+    g.add_argument("--limit", type=int, default=3, help="自動対象の最大件数")
+    g.add_argument("--max-retries", type=int, default=3, dest="max_retries",
+                   help="1ジョブの再生成上限（顔NG/検証NG時）")
+    g.add_argument("--auto-approve", action="store_true",
+                   help="検証OK&顔ガードNGでなければ approved にする（既定は needs_review）")
+    g.add_argument("--dry-run", action="store_true", help="呼び出す内容だけ表示（鍵不要）")
+    g.set_defaults(func=cmd_generate)
 
     d = sub.add_parser("deliver", help="approved クリップを納品")
     d.add_argument("--dest", help="納品先（既定: bottle-scanner-video/domoai-exports/）")

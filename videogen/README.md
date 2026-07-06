@@ -82,10 +82,24 @@ python3 videogen/cli.py next       # 次ジョブの貼り付け用プロンプ�
 | `status` | 段別の進捗ボードと次に着手できるジョブ |
 | `next [--limit N]` | 依存が満たされ次に生成すべきジョブの貼り付けブロック |
 | `show <id>` | 1ジョブのプロンプト/参照/出力名/seed |
+| `generate --backend {chrome,fal} [--id/--stage/--dry-run/--auto-approve]` | 生成実行（chrome=指示出し / fal=自動生成+検証+顔ガード+リトライ） |
 | `set <id> <status>` | ステータス更新（pending/generating/needs_review/approved/done/failed） |
 | `validate [id]` | output/ の成果物を機械検証（縦型9:16・尺） |
 | `faceguard <id>` | 生成物と基準顔の顔一貫性（cosine類似度、要insightface） |
 | `deliver [--dest DIR]` | approvedクリップを domoai-exports/ へアトミック納品 |
+
+### 生成バックエンド（差し替え可能）
+- **`chrome`（既定・採用）**: 手動/claude-in-chrome で Web UI を操作。`generate --backend chrome` は
+  対象ジョブの貼り付けブロックを出すだけ（実生成は人/ブラウザ）。手順 → [chrome_control/PLAYBOOK.md](chrome_control/PLAYBOOK.md)。
+- **`fal`（任意・API化）**: `pip install fal-client` ＋ `export FAL_KEY=...` で自動生成。
+  Nano Banana Pro（①基準顔／②編集で顔固定）→ Kling O1 Reference（③I2V）。
+  鍵なしでも `--dry-run` で送信内容を確認できる:
+  ```bash
+  python3 videogen/cli.py generate --backend fal --dry-run --id still_SHOT01
+  python3 videogen/cli.py generate --backend fal --auto-approve --stage 1   # 実行（要FAL_KEY）
+  ```
+  モデルは `pipeline/backends/fal_backend.py` の `MODELS` か環境変数で差し替え可
+  （例 `VIDEOGEN_FAL_EDIT=fal-ai/bytedance/seedream/v4.5/edit`）。
 
 ---
 
@@ -103,7 +117,10 @@ videogen/
 │   ├── manifest.py        決定的seed・キャッシュ・状態管理（Irodori manifest の映像版）
 │   ├── validate.py        ffprobeで9:16/尺を検証
 │   ├── faceguard.py       顔一貫性ガード（Irodori tsuki_noise の映像版）
-│   └── deliver.py         アトミック納品
+│   ├── deliver.py         アトミック納品
+│   └── backends/          差し替え可能な生成バックエンド
+│       ├── chrome.py      手動/Chrome操作（既定）
+│       └── fal_backend.py fal.ai 自動生成（任意・Nano Banana Pro→Kling O1）
 ├── chrome_control/
 │   ├── PLAYBOOK.md        Chrome操作の運用手順（採用バックエンド）
 │   └── domoai.md          DomoAI Web UI 固有のフロー
