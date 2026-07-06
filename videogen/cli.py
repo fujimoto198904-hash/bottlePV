@@ -290,14 +290,57 @@ def cmd_generate(args) -> None:
     print("\n完了。`status` で確認、承認は `set <id> approved`、納品は `deliver`。")
 
 
+def _export_block(r: dict) -> str:
+    refs = r.get("reference_images") or []
+    ref_line = ("参照画像(一貫性): " + ", ".join(refs)) if refs else "参照画像: なし"
+    dur = f", {r['duration_s']}s" if r.get("duration_s") else ""
+    out = [
+        f"### `{r['id']}` → `{r['output']}`  ({r['aspect_ratio']}{dur})  seed={r.get('seed')}",
+        f"- 概要: {r.get('label','')}",
+        f"- {ref_line}",
+        "",
+        "**PROMPT**",
+        "```",
+        r["prompt"],
+        "```",
+    ]
+    if r.get("negative"):
+        out += ["**NEGATIVE**", "```", r["negative"], "```"]
+    return "\n".join(out)
+
+
+def cmd_export(args) -> None:
+    rows = _rows()
+    lines = [
+        "# 全ジョブ プロンプト集（貼り付け用・自動生成）",
+        "",
+        "`videogen/cli.py export` が manifest から生成。①→②→③の順に生成する。",
+        "命名は各ブロックの出力名どおり `videogen/output/` に保存 → `set <id> approved`。",
+        "手順: [PLAYBOOK.md](PLAYBOOK.md) / [domoai.md](domoai.md)。",
+    ]
+    for stage in (1, 2, 3):
+        lines += ["", f"## {STAGE_NAME[stage]}", ""]
+        for r in [x for x in rows if x["stage"] == stage]:
+            lines += [_export_block(r), ""]
+    out = Path(args.out) if args.out else (ROOT / "chrome_control" / "all-prompts.md")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"wrote {out} ({len(rows)} jobs)")
+
+
 def cmd_deliver(args) -> None:
     rows = _rows()
     dest = Path(args.dest) if args.dest else DEFAULT_DEST
-    approved_clips = [r for r in rows if r["kind"] == "clip" and r["status"] == "approved"]
-    if not approved_clips:
-        print("納品対象（approved なクリップ）なし。")
+    kinds = [k.strip() for k in args.kinds.split(",") if k.strip()]
+    bad = [k for k in kinds if k not in ("base_face", "still", "clip")]
+    if bad:
+        print(f"未知の種別: {bad}（base_face,still,clip）", file=sys.stderr)
+        sys.exit(2)
+    targets = [r for r in rows if r["kind"] in kinds and r["status"] == "approved"]
+    if not targets:
+        print(f"納品対象（approved / kinds={kinds}）なし。")
         return
-    for r in approved_clips:
+    for r in targets:
         src = OUTPUT_DIR / r["output"]
         try:
             final = deliver_mod.deliver_one(src, dest)
@@ -354,8 +397,14 @@ def main(argv=None) -> None:
     g.add_argument("--dry-run", action="store_true", help="呼び出す内容だけ表示（鍵不要）")
     g.set_defaults(func=cmd_generate)
 
-    d = sub.add_parser("deliver", help="approved クリップを納品")
+    e = sub.add_parser("export", help="全ジョブのプロンプトを1つのmdに出力")
+    e.add_argument("--out", help="出力先（既定: chrome_control/all-prompts.md）")
+    e.set_defaults(func=cmd_export)
+
+    d = sub.add_parser("deliver", help="approved 成果物を納品")
     d.add_argument("--dest", help="納品先（既定: bottle-scanner-video/domoai-exports/）")
+    d.add_argument("--kinds", default="clip",
+                   help="納品する種別（既定 clip。例: base_face,still,clip）")
     d.set_defaults(func=cmd_deliver)
 
     args = p.parse_args(argv)

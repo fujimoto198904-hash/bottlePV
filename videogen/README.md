@@ -86,7 +86,8 @@ python3 videogen/cli.py next       # 次ジョブの貼り付け用プロンプ�
 | `set <id> <status>` | ステータス更新（pending/generating/needs_review/approved/done/failed） |
 | `validate [id]` | output/ の成果物を機械検証（縦型9:16・尺） |
 | `faceguard <id>` | 生成物と基準顔の顔一貫性（cosine類似度、要insightface） |
-| `deliver [--dest DIR]` | approvedクリップを domoai-exports/ へアトミック納品 |
+| `export [--out F]` | 全21ジョブのプロンプトを1つのmdへ（既定 `chrome_control/all-prompts.md`） |
+| `deliver [--dest DIR] [--kinds ...]` | approved成果物を domoai-exports/ へアトミック納品（既定 clip。`--kinds base_face,still,clip`で全種） |
 
 ### 生成バックエンド（差し替え可能）
 - **`chrome`（既定・採用）**: 手動/claude-in-chrome で Web UI を操作。`generate --backend chrome` は
@@ -125,8 +126,10 @@ videogen/
 │       ├── chrome.py      手動/Chrome操作（既定）
 │       └── fal_backend.py fal.ai 自動生成（任意・Nano Banana Pro→Kling O1）
 ├── chrome_control/
+│   ├── KICKOFF.md         開放環境チャットへの引き継ぎ＋キックオフ文
 │   ├── PLAYBOOK.md        Chrome操作の運用手順（採用バックエンド）
-│   └── domoai.md          DomoAI Web UI 固有のフロー
+│   ├── domoai.md          DomoAI Web UI 固有のフロー
+│   └── all-prompts.md     全21ジョブのプロンプト一覧（export生成）
 └── output/                生成物の一時置き場（gitignore、確定物のみ納品へ）
 ```
 
