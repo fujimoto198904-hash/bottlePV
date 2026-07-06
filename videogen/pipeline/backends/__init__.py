@@ -4,10 +4,12 @@ from __future__ import annotations
 from .base import Backend, GenerationError  # noqa: F401
 from .chrome import ChromeBackend
 from .fal_backend import FalBackend
+from .mock import MockBackend
 
 _REGISTRY = {
     "chrome": ChromeBackend,
     "fal": FalBackend,
+    "mock": MockBackend,
 }
 
 

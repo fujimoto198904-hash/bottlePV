@@ -100,6 +100,9 @@ python3 videogen/cli.py next       # 次ジョブの貼り付け用プロンプ�
   ```
   モデルは `pipeline/backends/fal_backend.py` の `MODELS` か環境変数で差し替え可
   （例 `VIDEOGEN_FAL_EDIT=fal-ai/bytedance/seedream/v4.5/edit`）。
+- **`mock`（テスト用）**: ffmpegで1080×1920プレースホルダを合成。鍵・課金・ネット不要で
+  `generate→validate→承認→deliver` の全経路を通せる（動作確認・回帰用）。
+  検証済み: `generate --backend mock --auto-approve` で3基準顔→9静止画→9クリップを完走。
 
 ---
 
