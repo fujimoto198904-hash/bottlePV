@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bottle Scanner ─ アニマティック（35秒 previz）</title>
+<style>
+  :root{--amber:#E8B451;--mint:#3FE0C5;--char:#14110E;--ink:#F5EFE6;--muted:#b7ad9c;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#0a0806;color:var(--ink);
+    font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',system-ui,sans-serif;overflow:hidden}
+  #wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px}
+  #stageWrap{position:relative;height:calc(100% - 74px);aspect-ratio:9/16;max-width:100%;
+    border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#14110E}
+  #stage{position:absolute;inset:0}
+  .layer{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity .25s}
+  .layer.on{opacity:1}
+  /* slate card */
+  #slate{background:
+     radial-gradient(120% 90% at 50% 35%, #241d16 0%, #100d0a 100%);}
+  #slate .tag{position:absolute;top:6%;left:0;right:0;color:var(--mint);letter-spacing:3px;font-weight:700;font-size:clamp(11px,3.4vh,20px)}
+  #slate .shot{font-size:clamp(30px,10vh,90px);font-weight:900;color:var(--ink);line-height:1}
+  #slate .shot b{color:var(--amber)}
+  #slate .tc{margin-top:2vh;color:var(--mint);font-weight:700;font-size:clamp(14px,4vh,26px)}
+  #slate .act{margin-top:4vh;padding:0 8%;color:var(--muted);font-size:clamp(13px,3.4vh,22px);line-height:1.6}
+  #slate .cam{margin-top:2vh;color:#8a8172;font-size:clamp(11px,2.8vh,17px)}
+  #slate .frameNo{position:absolute;bottom:3.5%;left:0;right:0;color:#6a6255;font-size:clamp(10px,2.4vh,15px);letter-spacing:2px}
+  #slate.ar-mode .shot,#slate.ar-mode .tc,#slate.ar-mode .act,#slate.ar-mode .cam{opacity:0;transition:opacity .2s}
+  /* bottle icon */
+  .icon{width:34%;margin:3vh auto}
+  /* brighten flash for the discovery */
+  #flash{background:radial-gradient(circle at 50% 42%, rgba(63,224,197,.28), rgba(63,224,197,0) 60%);}
+  /* AR overlay */
+  #ar svg{width:100%;height:100%}
+  #toast{position:absolute;top:20%;left:8%;right:8%;background:linear-gradient(#1D1913,#14110E);
+    border:2px solid var(--mint);border-radius:22px;padding:14px 16px;display:flex;align-items:center;gap:14px;
+    transform:scale(.85);opacity:0;transition:all .25s cubic-bezier(.2,1.4,.4,1)}
+  #toast.on{transform:scale(1);opacity:1}
+  #toast .badge{width:16%;aspect-ratio:1;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex:none}
+  #toast .badge svg{width:60%;height:60%}
+  #toast .t1{font-weight:800;font-size:clamp(16px,4.4vh,30px)}
+  #toast .t2{font-weight:600;color:var(--mint);font-size:clamp(11px,3vh,20px)}
+  #toast .shelf{margin-left:auto;background:var(--amber);color:var(--char);border-radius:10px;padding:6px 10px;text-align:center;font-weight:800;flex:none}
+  #toast .shelf small{display:block;font-size:.7em;font-weight:700}
+  /* CTA */
+  #cta{background:radial-gradient(120% 90% at 50% 40%, #26201A 0%, #100D0A 100%)}
+  #cta .wm{font-size:clamp(30px,9vh,80px);font-weight:800}
+  #cta .wm b{color:var(--amber)}
+  #cta .div{width:34%;height:3px;background:var(--mint);opacity:.8;margin:2.4vh 0}
+  #cta .main{font-size:clamp(20px,5.4vh,46px);font-weight:800;line-height:1.35}
+  #cta .main b{color:var(--amber)}
+  #cta .pill{margin-top:4vh;background:var(--mint);color:var(--char);font-weight:800;border-radius:999px;padding:12px 26px;font-size:clamp(15px,4vh,30px)}
+  /* subtitle */
+  #sub{position:absolute;left:6%;right:6%;bottom:9%;text-align:center;font-weight:800;
+    font-size:clamp(16px,4.2vh,32px);color:var(--ink);text-shadow:0 2px 6px #000,0 0 3px #000;opacity:0;transition:opacity .12s}
+  #sub.on{opacity:1}
+  #sub.inner{color:#cfe8e0;font-style:italic}
+  #vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 160px rgba(0,0,0,.55)}
+  /* controls */
+  #bar{width:min(100%,520px);display:flex;flex-direction:column;gap:6px}
+  #tl{position:relative;height:26px;background:#0c0a08;border:1px solid #3a3228;border-radius:8px;cursor:pointer;overflow:hidden}
+  #played{position:absolute;top:0;bottom:0;left:0;width:0;background:linear-gradient(90deg,rgba(63,224,197,.35),rgba(232,180,81,.35))}
+  #head{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--ink);border-radius:2px}
+  .mk{position:absolute;top:0;bottom:0;width:1px;background:#4a4234}
+  #ctrls{display:flex;align-items:center;gap:12px}
+  button{background:#1D1913;border:1px solid #3a3228;color:var(--ink);border-radius:9px;padding:8px 14px;font-size:14px;cursor:pointer;font-weight:700}
+  button:hover{border-color:var(--mint)}
+  /* export mode: full-frame stage only (for video capture) */
+  body.export #bar{display:none}
+  body.export #wrap{padding:0;gap:0}
+  body.export #stageWrap{height:100%;max-width:none;border-radius:0;box-shadow:none}
+  #play{background:var(--mint);color:var(--char);border-color:var(--mint);min-width:96px}
+  #tcode{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;margin-left:auto}
+  .hint{color:#6a6255;font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stageWrap">
+    <div id="stage">
+      <!-- slate -->
+      <div id="slate" class="layer on">
+        <div class="tag" id="slateTag">STORYBOARD ANIMATIC</div>
+        <div class="shot" id="slateShot">SHOT 01</div>
+        <div class="tc" id="slateTc">0:00–0:04</div>
+        <div class="act" id="slateAct">—</div>
+        <div class="cam" id="slateCam">—</div>
+        <div class="frameNo">BOTTLE SCANNER ─ PREVIZ / 35s / 9:16</div>
+      </div>
+      <!-- AR discovery -->
+      <div id="ar" class="layer">
+        <svg viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round">
+            <path d="M80,300 V120 H260"/><path d="M1000,300 V120 H820"/>
+            <path d="M80,1620 V1800 H260"/><path d="M1000,1620 V1800 H820"/>
+          </g>
+          <g transform="translate(540,760)" stroke="#3FE0C5" fill="none" stroke-linecap="round">
+            <g stroke-width="6"><path d="M-150,-70 V-230 H10"/><path d="M150,-70 V-230 H-10"/><path d="M-150,250 V410 H10"/><path d="M150,250 V410 H-10"/></g>
+            <g stroke-width="3"><line x1="-40" y1="90" x2="40" y2="90"/><line x1="0" y1="50" x2="0" y2="130"/></g>
+          </g>
+          <text x="150" y="242" fill="#3FE0C5" font-family="monospace" font-size="34" letter-spacing="6" font-weight="700">SCANNING…</text>
+        </svg>
+      </div>
+      <div id="flash" class="layer"></div>
+      <div id="toast">
+        <div class="badge"><svg viewBox="0 0 40 40"><path d="M11 20 l6 7 l12 -14" fill="none" stroke="#14110E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="text-align:left"><div class="t1">山崎 12年</div><div class="t2">ボトルキープ確認</div></div>
+        <div class="shelf">A-7<small>棚</small></div>
+      </div>
+      <!-- CTA -->
+      <div id="cta" class="layer">
+        <svg class="icon" viewBox="0 0 200 268" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round">
+            <path d="M8,70 V8 H70"/><path d="M192,70 V8 H130"/><path d="M8,196 V258 H70"/><path d="M192,196 V258 H130"/></g>
+          <path d="M86,34 H114 V80 C114,80 134,92 134,118 V198 C134,210 125,218 113,218 H87 C75,218 66,210 66,198 V118 C66,92 86,80 86,80 Z" fill="#E8B451"/>
+          <rect x="84" y="22" width="32" height="16" rx="4" fill="#3FE0C5"/>
+          <rect x="78" y="142" width="44" height="52" rx="6" fill="#14110E"/>
+          <path d="M88,168 l7,8 l14,-16" fill="none" stroke="#3FE0C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="wm">Bottle <b>Scanner</b></div>
+        <div class="div"></div>
+        <div class="main">探す時間を、<b>おもてなしの時間に。</b></div>
+        <div class="pill">詳しくはプロフィールから</div>
+      </div>
+      <div id="sub"></div>
+      <div id="vignette"></div>
+    </div>
+  </div>
+
+  <div id="bar">
+    <div id="tl"><div id="played"></div><div id="head"></div></div>
+    <div id="ctrls">
+      <button id="play">▶ 再生</button>
+      <button id="restart">⟲ 最初へ</button>
+      <span id="tcode">00:00 / 00:35</span>
+    </div>
+    <div class="hint">タイミング検証用アニマティック（仮映像＋合成音）。実映像はDomoAI、声はIrodoriで作って差し替え。クリックでシーク可。音は再生ボタンから。</div>
+  </div>
+</div>
+
+<script>
+const DUR=35;
+// scenes: [start,end,shot,title,cam]
+const SCENES=[
+ [0,4,"SHOT 01","establishing・マナミの注文","ミディアム／ドリーイン"],
+ [4,8,"SHOT 02","ケンジ、棚を振り返り固まる","バスト→壁ラックフォーカス"],
+ [8,12,"SHOT 03","ラベルを一本ずつ探す焦り","手元＋横顔クロース／微ブレ"],
+ [12,15,"SHOT 04","マナミがチラッと時間を見る","クロースアップ"],
+ [15,18,"SHOT 05","タカシが気づいて小声で気遣う","タカシ→ケンジの視線"],
+ [18,21,"SHOT 06","ひらめき→スマホを取り出す","クロースアップ"],
+ [21,24,"SHOT 07","AR発見 ★ヒーロー","肩越し＋AR合成／暗→明"],
+ [24,28,"SHOT 08","ボトルを取り、提供","動作追いミディアム"],
+ [28,32,"SHOT 09","マナミの笑顔／タカシのうなずき","笑顔CU＋奥ボケ"],
+ [32,35,"CTA","ロゴ＋キャッチコピー","エンドカード"]
+];
+// subtitles: [start,end,text,inner?]
+const SUBS=[
+ [1,4,"いつものボトル、お願いできる？山崎の…",0],
+ [5,7.8,"あ、はい！少々お待ちください…！",0],
+ [9,11.5,"（え、どれだっけ…先週も探したのに…）",1],
+ [16,17.8,"ケンジ、大丈夫か？",0],
+ [22,23,"…あった！",0],
+ [25,27.5,"お待たせしました、山崎です",0],
+ [29,31.8,"早いね、ケンジ君。頼りになる",0]
+];
+const $=id=>document.getElementById(id);
+const layers={slate:$("slate"),ar:$("ar"),flash:$("flash"),cta:$("cta")};
+// timeline markers
+SCENES.forEach(s=>{const m=document.createElement("div");m.className="mk";m.style.left=(s[0]/DUR*100)+"%";$("tl").appendChild(m);});
+
+let t=0, playing=false, last=0;
+function fmt(x){x=Math.max(0,x);const m=String(Math.floor(x/60)).padStart(2,"0"),s=String(Math.floor(x%60)).padStart(2,"0");return m+":"+s;}
+
+function render(){
+  const sc=SCENES.find(s=>t>=s[0]&&t<s[1])||SCENES[SCENES.length-1];
+  const isCTA=sc[2]==="CTA", isAR=(t>=21&&t<24);
+  // slate
+  layers.slate.classList.toggle("on", !isCTA);
+  if(!isCTA){
+    $("slateShot").innerHTML = sc[2].replace("SHOT","SHOT ").replace(/(\d+)/,"<b>$1</b>");
+    $("slateTc").textContent = sc[0]<10?("0:0"+sc[0]+"–0:"+(sc[1]<10?"0":"")+sc[1]):("0:"+sc[0]+"–0:"+sc[1]);
+    $("slateAct").textContent = sc[3];
+    $("slateCam").textContent = "カメラ： "+sc[4];
+    $("slateTag").textContent = isAR? "★ HERO SHOT ─ AR DISCOVERY" : "STORYBOARD ANIMATIC";
+  }
+  // AR + flash + toast (21-24)
+  layers.slate.classList.toggle("ar-mode", isAR);
+  layers.ar.classList.toggle("on", isAR);
+  const flashAmt = (t>=21&&t<21.6)? (1-(Math.abs(t-21.3)/0.3)) : (t>=21.6&&t<24?0.25:0);
+  $("flash").style.opacity = Math.max(0,flashAmt);
+  $("toast").classList.toggle("on", t>=21.5 && t<24);
+  // CTA
+  layers.cta.classList.toggle("on", isCTA);
+  // subtitle
+  const su=SUBS.find(s=>t>=s[0]&&t<s[1]);
+  const sub=$("sub");
+  if(su){sub.textContent=su[2];sub.className="on"+(su[3]?" inner":"");}
+  else{sub.className="";}
+  // timeline
+  $("played").style.width=(t/DUR*100)+"%";
+  $("head").style.left=(t/DUR*100)+"%";
+  $("tcode").textContent=fmt(t)+" / 00:35";
+}
+
+/* ---------- Web Audio (synthesized SE + cues) ---------- */
+let ctx=null, sched=[];
+function ensureCtx(){ if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)(); return ctx; }
+function bell(at,freq,dur,amp,partials){
+  const c=ctx, o=c.createOscillator(), g=c.createGain();
+  o.type="sine"; o.frequency.value=freq; o.connect(g); g.connect(master);
+  g.gain.setValueAtTime(0,at); g.gain.linearRampToValueAtTime(amp,at+0.004);
+  g.gain.exponentialRampToValueAtTime(0.0008,at+dur);
+  o.start(at); o.stop(at+dur+0.02); sched.push(o);
+  if(partials){const o2=c.createOscillator(),g2=c.createGain();o2.frequency.value=freq*2;o2.connect(g2);g2.connect(master);
+    g2.gain.setValueAtTime(0,at);g2.gain.linearRampToValueAtTime(amp*0.4,at+0.004);g2.gain.exponentialRampToValueAtTime(0.0006,at+dur*0.8);
+    o2.start(at);o2.stop(at+dur+0.02);sched.push(o2);}
+}
+function sweep(at,dur){const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.connect(g);g.connect(master);
+  o.frequency.setValueAtTime(380,at);o.frequency.exponentialRampToValueAtTime(1650,at+dur);
+  g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(0.18,at+dur*0.4);g.gain.linearRampToValueAtTime(0,at+dur);
+  o.start(at);o.stop(at+dur+0.02);sched.push(o);}
+function tick(at){const o=ctx.createOscillator(),g=ctx.createGain();o.type="triangle";o.frequency.value=880;o.connect(g);g.connect(master);
+  g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(0.05,at+0.005);g.gain.exponentialRampToValueAtTime(0.0006,at+0.08);
+  o.start(at);o.stop(at+0.1);sched.push(o);}
+function pad(at,dur){[261.6,329.6,392].forEach(f=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=f;o.connect(g);g.connect(master);
+  g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(0.05,at+0.6);g.gain.linearRampToValueAtTime(0.05,at+dur-0.6);g.gain.linearRampToValueAtTime(0,at+dur);
+  o.start(at);o.stop(at+dur+0.05);sched.push(o);});}
+let master=null;
+function scheduleAudio(fromT){
+  clearAudio();
+  const base=ctx.currentTime - fromT + 0.05;
+  const ev=[];
+  // tension ticks 8-18s
+  for(let x=8;x<18;x+=0.5) ev.push([x,()=>tick(base+x)]);
+  ev.push([20.6,()=>sweep(base+20.6,0.38)]);
+  // piron at 21.0: two ascending bells
+  ev.push([21.0,()=>{bell(base+21.0,1318.51,0.5,0.5,true);bell(base+21.13,1567.98,0.5,0.55,true);}]);
+  ev.push([24,()=>pad(base+24,7)]);
+  // brand chime arpeggio at 32
+  ev.push([32,()=>{[523.25,659.25,783.99,1046.5].forEach((f,i)=>bell(base+32+i*0.08,f,0.9,0.4,true));}]);
+  ev.forEach(([time,fn])=>{ if(time>=fromT-0.01) fn(); });
+}
+function clearAudio(){ sched.forEach(o=>{try{o.stop();}catch(e){}}); sched=[]; }
+
+function play(){
+  ensureCtx(); if(ctx.state==="suspended") ctx.resume();
+  if(!master){master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);}
+  if(t>=DUR) t=0;
+  playing=true; $("play").textContent="⏸ 一時停止"; last=performance.now();
+  scheduleAudio(t); loop();
+}
+function pause(){ playing=false; $("play").textContent="▶ 再生"; clearAudio(); }
+function loop(){
+  if(!playing) return;
+  const now=performance.now(); t+=(now-last)/1000; last=now;
+  if(t>=DUR){ t=DUR; render(); pause(); return; }
+  render(); requestAnimationFrame(loop);
+}
+$("play").onclick=()=> playing?pause():play();
+$("restart").onclick=()=>{ t=0; render(); if(playing){clearAudio();scheduleAudio(0);last=performance.now();} };
+$("tl").onclick=e=>{ const r=$("tl").getBoundingClientRect(); t=Math.max(0,Math.min(DUR,(e.clientX-r.left)/r.width*DUR));
+  render(); if(playing){clearAudio();scheduleAudio(t);last=performance.now();} };
+render();
+// deep-link / export: #t=SS(&export=1) sets a static frame; export hides controls for video capture
+(function(){
+  const hp=new URLSearchParams(location.hash.slice(1));
+  if(hp.has("export")) document.body.classList.add("export");
+  if(hp.has("t")){ t=parseFloat(hp.get("t"))||0; render(); }
+})();
+</script>
+</body>
+</html>

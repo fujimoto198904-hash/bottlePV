@@ -16,11 +16,22 @@
 | 01 | `01_production-bible.md` | 企画・フォーマット仕様・キャラ設定・ライティング指針 | 制作前に方向性を固める |
 | 02 | `02_shot-list.md` | 10ショットの絵コンテ表（タイムコード付き） | 撮る順番・尺の設計図 |
 | 03 | `03_domoai-prompts.md` | DomoAI用プロンプト（keyframe画像＋I2V動作＋T2V予備） | DomoAIで映像を作るとき |
+| 03b | `domoai-prompt-bank-100.md` | **DomoAI生成プロンプト100本**（画角違い/別版/Bロール/CTA背景） | 当たりテイクを引く・素材を盛る |
 | 04 | `04_irodori-voice-script.md` | Irodori用 音声台本（キャラ別・感情・速度・読み） | Irodoriで声を作るとき |
 | 05 | `05_se-bgm-cue-sheet.md` | SE/BGMキューシート・通知音スペック | 音の素材を集めるとき |
 | 06 | `06_graphics-telop-spec.md` | テロップ・字幕・CTAコピー・デザイン仕様 | 文字とグラフィックを載せるとき |
 | 07 | `07_fcpx-assembly-guide.md` | FCPXタイムライン構成・グレーディング・書き出し設定 | 最終合成のとき |
+| 08 | `08_16x9-version-guide.md` | 16:9併用版の構図リフレーム・設定・素材 | 横型も出すとき |
+| 09 | `09_domoai-generation-brief.md` | **DomoAI生成ブリーフ**（ネット開放環境のClaudeに実生成させる指示） | 別チャットで映像を生成させるとき |
 | — | `assets/` | 実データ素材（AR UI・ロゴ・CTA のSVG） | FCPXに読み込む |
+| — | `assets/png/` | 上記SVGを書き出した**透過PNG**（1080×1920等）＋サムネPNG | FCPXがSVGを読めない時はこちら |
+| — | `assets/16x9/` | 16:9版のCTA・ARオーバーレイ（SVG＋PNG） | 16:9併用版のとき |
+| — | `assets/thumbnail-9x16.svg` / `thumbnail-16x9.svg` | サムネ／カバー画像（フック付き） | SNS投稿・YouTube |
+| — | `assets/audio/` | 合成SEの**実WAV**（ピロン/スキャン/ブランドチャイム） | 音を仮組み・本番でも使用可 |
+| — | `subtitles/` | 字幕 **SRT**（本編＋altA/altB/altC/altD/altE英語） | 字幕を載せるとき |
+| — | `alt-versions/` | 別バージョン台本5本（ベテラン/満席/女性店長/記念日/英語） | 横展開するとき |
+| — | `animatic/index.html` | **再生できる35秒アニマティック**（仮映像＋合成音） | 尺・テンポの当たり確認 |
+| — | `voice-master-list.csv` | 全バージョンの音声ライン一覧（全31） | Irodoriで一括収録 |
 | — | `dashboard/index.html` | 制作ダッシュボード（全部入りUI・進捗管理） | 制作中つねに開いておく |
 | — | `voice-exports/` | Irodoriから書き出した音声の置き場（命名規則あり） | 音声を保存する |
 | — | `domoai-exports/` | DomoAIから書き出した映像クリップの置き場（命名規則あり） | 映像を保存する |

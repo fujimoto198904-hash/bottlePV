@@ -1,0 +1,44 @@
+<!--
+  Bottle Scanner ─ サムネイル 16:9版（1280x720 / YouTube等）
+  用途: YouTubeサムネ・横型カバー。フック「そのボトル、何分探してますか？」
+  PNG書き出し: 1280x720 PNG
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" font-family="'Noto Sans JP','Hiragino Kaku Gothic ProN','Helvetica Neue',sans-serif">
+  <defs>
+    <radialGradient id="tbg9" cx="0.35" cy="0.5" r="0.95"><stop offset="0" stop-color="#2A231C"/><stop offset="1" stop-color="#0E0B08"/></radialGradient>
+    <linearGradient id="tamber9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1C978"/><stop offset="1" stop-color="#D99A34"/></linearGradient>
+    <filter id="tglow9" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="tbokeh9" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#tbg9)"/>
+  <g filter="url(#tbokeh9)" opacity="0.5">
+    <circle cx="1120" cy="140" r="70" fill="#E8B451" opacity="0.4"/>
+    <circle cx="1180" cy="600" r="80" fill="#3FE0C5" opacity="0.3"/>
+  </g>
+
+  <!-- HOOK left -->
+  <g>
+    <text x="80" y="180" font-size="34" font-weight="700" fill="#3FE0C5" letter-spacing="3">─ 新人スタッフの、あるある。</text>
+    <text x="76" y="300" font-size="92" font-weight="900" fill="#F5EFE6">そのボトル、</text>
+    <text x="76" y="410" font-size="92" font-weight="900" fill="#E8B451">何分探してる？</text>
+    <g transform="translate(80,500)">
+      <rect x="0" y="-46" width="470" height="88" rx="44" fill="#3FE0C5"/>
+      <text x="235" y="14" font-size="44" font-weight="800" fill="#14110E" text-anchor="middle">かざすだけ、0.5秒。</text>
+    </g>
+    <text x="80" y="640" font-size="60" font-weight="800" fill="#F5EFE6">Bottle <tspan fill="#E8B451">Scanner</tspan></text>
+  </g>
+
+  <!-- ICON right -->
+  <g transform="translate(880,190) scale(1.25)">
+    <g stroke="#3FE0C5" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#tglow9)">
+      <path d="M8,70 V8 H70"/><path d="M192,70 V8 H130"/><path d="M8,196 V258 H70"/><path d="M192,196 V258 H130"/>
+    </g>
+    <line x1="18" y1="133" x2="182" y2="133" stroke="#3FE0C5" stroke-width="3" opacity="0.7"/>
+    <path d="M86,34 H114 V80 C114,80 134,92 134,118 V198 C134,210 125,218 113,218 H87 C75,218 66,210 66,198 V118 C66,92 86,80 86,80 Z"
+          fill="url(#tamber9)" stroke="#14110E" stroke-width="2"/>
+    <rect x="84" y="22" width="32" height="16" rx="4" fill="#3FE0C5"/>
+    <rect x="78" y="142" width="44" height="52" rx="6" fill="#14110E" opacity="0.85"/>
+    <path d="M88,168 l7,8 l14,-16" fill="none" stroke="#3FE0C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

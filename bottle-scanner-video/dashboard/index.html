@@ -210,8 +210,30 @@ const AUDIO=[
 ["◎","0:32","ブランドウーシュ＋チャイム","SE_0032_brand.wav"],
 ["—","0:00–35","BGM(区間で強弱・ダッキング)","BGM_main.wav"]
 ];
+const ALTVERSIONS=[
+{key:"altA",name:"ベテラン自慢版",log:"タカシが後輩に自慢。「使えるモンは、使わなきゃな」",file:"alt-versions/altA_veteran-brag.md",srt:"subtitles/altA_veteran-brag_ja.srt",lines:[["ケンジ","あれ…どこだっけ…"],["タカシ","ん？　貸してみ"],["タカシ","ほい、これだろ？"],["ケンジ","えっ、なんで一発で…！？"],["タカシ","Bottle Scanner。使えるモンは、使わなきゃな"]]},
+{key:"altB",name:"満席の忙しい夜版",log:"アンサンブル。ピロン連打のテンポ。忙しい夜こそ差が出る",file:"alt-versions/altB_busy-night.md",srt:"subtitles/altB_busy-night_ja.srt",lines:[["客A","山崎、ロックで！"],["客B","こっち白州ハイボール！"],["ケンジ","はい、ただいま！"],["タカシ","忙しい夜こそ、差が出る"]]},
+{key:"altC",name:"女性店長版",log:"ミサキ(女性店長)の余裕とホスピタリティ。「一本、忘れませんよ」",file:"alt-versions/altC_female-manager.md",srt:"subtitles/altC_female-manager_ja.srt",lines:[["常連客","ミサキさん、あのボトルまだある？去年入れたやつ"],["ミサキ","もちろんです"],["ミサキ","お客様の一本、忘れませんよ"],["若手","…Bottle Scanner、さすがだ"]]},
+{key:"altD",name:"記念日サプライズ版",log:"泣ける寄り。「大切な一本を、大切な瞬間に。」",file:"alt-versions/altD_anniversary-surprise.md",srt:"subtitles/altD_anniversary-surprise_ja.srt",lines:[["男性客","1年前、ここで一本キープしたんだけど…"],["ケンジ","はい、承知しております"],["ケンジ","こちらですね。記念日、おめでとうございます"],["女性客","覚えててくれたの…"]]},
+{key:"altE",name:"英語ナレーション版",log:"海外/インバウンド向け。映像はベース流用、音声のみ英語",file:"alt-versions/altE_english-narration.md",srt:"subtitles/altE_english.srt",lines:[["NA","Every night, the same question: which bottle was theirs?"],["NA","One shelf. Dozens of bottles. And a guest, waiting."],["NA","Until now."],["NA","Bottle Scanner finds the exact one — instantly."],["NA","No more searching. Just hospitality."],["NA","Bottle Scanner. Link in bio."]]}
+];
+const RESOURCES=[
+["ロゴ","assets/logo-lockup.svg / png/","汎用ロゴ・サムネ"],
+["ARスキャンUI 9:16","assets/ar-scan-overlay.svg / png/","SHOT07オーバーレイ(透過)"],
+["通知トースト","assets/notification-toast.svg / png/","ピロン成功(透過)"],
+["CTAエンドカード 9:16","assets/cta-endcard.svg / png/","SHOT10"],
+["CTAエンドカード EN","assets/en/cta-endcard-en.svg / png/","英語版(altE)"],
+["16:9 CTA","assets/16x9/cta-endcard-16x9.svg / png/","横型CTA"],
+["16:9 AR","assets/16x9/ar-scan-overlay-16x9.svg / png/","横型AR(透過)"],
+["サムネ 9:16","assets/thumbnail-9x16.svg / png/","Reelsカバー/ポスター"],
+["サムネ 16:9","assets/thumbnail-16x9.svg / png/","YouTubeサムネ"],
+["字幕SRT","subtitles/*.srt","本編+altA/B/C/D+英語"],
+["音声マスター","voice-master-list.csv","全31ライン一覧(Irodori用)"],
+["合成SE(WAV)","assets/audio/*.wav","ピロン/スキャン/ブランドチャイム(実音源)"],
+["アニマティック","animatic/index.html","再生できる35秒previz(仮映像+合成音)"]
+];
 /* ---------- RENDER ---------- */
-const TABS=[["overview","概要・進行"],["shots","ショット & プロンプト"],["voice","音声台本(Irodori)"],["audio","音 (SE/BGM)"],["gfx","グラフィック"],["fcpx","FCPX合成"]];
+const TABS=[["overview","概要・進行"],["shots","ショット & プロンプト"],["voice","音声台本(Irodori)"],["audio","音 (SE/BGM)"],["gfx","グラフィック"],["alt","別バージョン"],["res","素材・書き出し"],["fcpx","FCPX合成"]];
 const store=JSON.parse(localStorage.getItem("bs_prog")||"{}");
 function save(){localStorage.setItem("bs_prog",JSON.stringify(store));updateProg()}
 function ck(id,label){const on=!!store[id];return `<label class="ck ${on?'done':''}"><input type="checkbox" data-id="${id}" ${on?'checked':''}>${label}</label>`}
@@ -332,7 +354,24 @@ function renderFcpx(){
   </div>`;
 }
 
-const RENDER={overview:renderOverview,shots:renderShots,voice:renderVoice,audio:renderAudio,gfx:renderGfx,fcpx:renderFcpx};
+function renderAlt(){
+  return `<h2>別バージョン</h2>
+  <div class="note">ベースのキャラ・世界観・ブランド・通知音を共通流用。詳細な尺配分・プロンプト差分は各mdファイル参照。制作手順はベースと同じ（声→映像→音→文字→FCPX）。</div>`+
+  ALTVERSIONS.map(v=>`<div class="card">
+    <h3>${v.name}<span class="tc">${v.key}</span></h3>
+    <div class="meta">${v.log}<br>台本：<code>${v.file}</code>　字幕：<code>${v.srt}</code></div>
+    ${v.lines.map(l=>`<div class="prompt"><button class="copy" data-copy="${encodeURIComponent(l[1])}">コピー</button><b style="color:var(--amber)">${esc(l[0])}：</b>${esc(l[1])}</div>`).join("")}
+  </div>`).join("");
+}
+function renderResources(){
+  return `<h2>素材・書き出し</h2>
+  <div class="note">SVGはベクター（拡大劣化なし）。FCPXがSVGを直接読めない場合は同名の<b>透過PNG</b>（各 <code>png/</code> フォルダ）を使用。</div>
+  <table><thead><tr><th>素材</th><th>パス</th><th>用途</th></tr></thead><tbody>
+  ${RESOURCES.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td><td>${r[2]}</td></tr>`).join("")}
+  </tbody></table>
+  <div class="note" style="margin-top:14px"><b>書き出し設定：</b>H.264 ／ 1080×1920(縦) or 1920×1080(横) ／ 30fps ／ 15–20Mbps ／ AAC 256k ／ -14 LUFS ／ True Peak ≤ -1dB。</div>`;
+}
+const RENDER={overview:renderOverview,shots:renderShots,voice:renderVoice,audio:renderAudio,gfx:renderGfx,alt:renderAlt,res:renderResources,fcpx:renderFcpx};
 const tabsEl=document.getElementById("tabs"),mainEl=document.getElementById("main");
 let cur="overview";
 TABS.forEach(([k,label])=>{const d=document.createElement("div");d.className="tab"+(k==cur?" active":"");d.textContent=label;d.onclick=()=>{cur=k;draw()};d.dataset.k=k;tabsEl.appendChild(d)});
